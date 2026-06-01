@@ -1,5 +1,6 @@
 import { Experiment } from "@/lib/types";
 import { PrintableSheetButton } from "@/components/experiments/printable-sheet-button";
+import { ExperimentVideo } from "@/components/experiments/experiment-video";
 
 function FormattedText({
   label,
@@ -25,6 +26,8 @@ export function ExperimentDetailCard({ experiment }: { experiment: Experiment })
       <p className="mt-2 whitespace-pre-line text-sm text-slate-700">
         {experiment.objective}
       </p>
+
+      {experiment.videoUrl && <ExperimentVideo videoUrl={experiment.videoUrl} />}
 
       <div className="mt-4 space-y-4 text-sm">
         {experiment.materials && (

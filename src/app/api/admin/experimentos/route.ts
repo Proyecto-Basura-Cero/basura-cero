@@ -14,6 +14,7 @@ const createSchema = z.object({
   conclusion: z.string().min(5, "La conclusion es obligatoria"),
   materials: z.string().optional(),
   printableUrl: z.string().optional(),
+  videoUrl: z.string().nullable().optional(),
   status: statusSchema.default("draft")
 });
 
@@ -38,7 +39,7 @@ export async function GET(request: Request) {
     let query = supabase
       .from("experiments")
       .select(
-        "id, week_number, title, objective, instructions, materials, printable_url, curious_fact, conclusion, status"
+        "id, week_number, title, objective, instructions, materials, printable_url, video_url, curious_fact, conclusion, status"
       )
       .order("week_number", { ascending: true });
 
@@ -58,6 +59,7 @@ export async function GET(request: Request) {
         instructions: e.instructions,
         materials: e.materials,
         printableUrl: e.printable_url,
+        videoUrl: e.video_url,
         curiousFact: e.curious_fact,
         conclusion: e.conclusion,
         status: e.status
@@ -92,6 +94,7 @@ export async function POST(request: Request) {
         conclusion: parsed.data.conclusion,
         materials: parsed.data.materials ?? null,
         printable_url: parsed.data.printableUrl || null,
+        video_url: parsed.data.videoUrl || null,
         status: parsed.data.status
       })
       .select("id")

@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { ExperimentVideoField } from "@/components/admin/experiment-video-field";
 
 type ExperimentStatus = "draft" | "published" | "archived";
 
@@ -12,6 +13,7 @@ type Experiment = {
   instructions: string;
   materials: string | null;
   printableUrl: string | null;
+  videoUrl: string | null;
   curiousFact: string;
   conclusion: string;
   status: ExperimentStatus;
@@ -26,6 +28,7 @@ type FormState = {
   conclusion: string;
   materials: string;
   printableUrl: string;
+  videoUrl: string;
   status: ExperimentStatus;
 };
 
@@ -38,6 +41,7 @@ const EMPTY_FORM: FormState = {
   conclusion: "",
   materials: "",
   printableUrl: "",
+  videoUrl: "",
   status: "draft"
 };
 
@@ -121,6 +125,7 @@ export function ExperimentsManager() {
       conclusion: experiment.conclusion,
       materials: experiment.materials ?? "",
       printableUrl: experiment.printableUrl ?? "",
+      videoUrl: experiment.videoUrl ?? "",
       status: experiment.status
     });
   };
@@ -141,6 +146,7 @@ export function ExperimentsManager() {
         conclusion: createForm.conclusion,
         materials: createForm.materials || undefined,
         printableUrl: createForm.printableUrl || undefined,
+        videoUrl: createForm.videoUrl || undefined,
         status: createForm.status
       })
     });
@@ -170,6 +176,7 @@ export function ExperimentsManager() {
         conclusion: editForm.conclusion,
         materials: editForm.materials || null,
         printableUrl: editForm.printableUrl || null,
+        videoUrl: editForm.videoUrl || null,
         status: editForm.status
       })
     });
@@ -310,6 +317,16 @@ export function ExperimentsManager() {
           className="mt-1 w-full rounded border border-slate-300 px-2 py-1"
         />
       </label>
+      <label className="text-sm sm:col-span-2">
+        <span className="block text-slate-600">Enlace de video (YouTube o URL directa)</span>
+        <input
+          type="text"
+          value={form.videoUrl}
+          onChange={(e) => setForm({ ...form, videoUrl: e.target.value })}
+          placeholder="https://youtube.com/watch?v=... (opcional al crear)"
+          className="mt-1 w-full rounded border border-slate-300 px-2 py-1"
+        />
+      </label>
     </div>
   );
 
@@ -417,6 +434,16 @@ export function ExperimentsManager() {
                     Semana {experiment.weekNumber} (no editable)
                   </p>
                   {renderFormFields(editForm, setEditForm)}
+                  <ExperimentVideoField
+                    experimentId={experiment.id}
+                    videoUrl={editForm.videoUrl}
+                    onChange={(videoUrl) =>
+                      setEditForm((current) =>
+                        current ? { ...current, videoUrl } : current
+                      )
+                    }
+                    disabled={submitting}
+                  />
                   <div className="flex flex-wrap gap-2">
                     <button
                       type="button"

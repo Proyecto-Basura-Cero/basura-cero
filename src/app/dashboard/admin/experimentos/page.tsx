@@ -12,9 +12,9 @@ export default function AdminExperimentsPage() {
             Configuracion de experimentos
           </h1>
           <p className="text-sm text-slate-600">
-            Edita titulo, objetivo, instrucciones, dato curioso, conclusion,
-            materiales y ficha PDF. Solo los experimentos publicados aparecen en
-            la biblioteca publica.
+            Edita titulo, objetivo, materiales, instrucciones, video, dato
+            curioso, conclusion, materiales y ficha PDF. Solo los experimentos
+            publicados aparecen en la biblioteca publica.
           </p>
         </header>
         <ExperimentsManager />

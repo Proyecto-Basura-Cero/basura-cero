@@ -13,6 +13,7 @@ const updateSchema = z.object({
   conclusion: z.string().min(5).optional(),
   materials: z.string().nullable().optional(),
   printableUrl: z.string().nullable().optional(),
+  videoUrl: z.string().nullable().optional(),
   status: statusSchema.optional()
 });
 
@@ -47,6 +48,9 @@ export async function PATCH(
     if (parsed.data.materials !== undefined) updates.materials = parsed.data.materials;
     if (parsed.data.printableUrl !== undefined) {
       updates.printable_url = parsed.data.printableUrl || null;
+    }
+    if (parsed.data.videoUrl !== undefined) {
+      updates.video_url = parsed.data.videoUrl || null;
     }
     if (parsed.data.status !== undefined) updates.status = parsed.data.status;
 
