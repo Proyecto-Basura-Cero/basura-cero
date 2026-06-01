@@ -11,14 +11,18 @@ export function ExperimentDetailCard({ experiment }: { experiment: Experiment })
         <p>
           <span className="font-semibold">Instrucciones:</span> {experiment.instructions}
         </p>
-        <p>
-          <span className="font-semibold">Materiales:</span> {experiment.materials}
-        </p>
+        {experiment.materials && (
+          <p>
+            <span className="font-semibold">Materiales:</span> {experiment.materials}
+          </p>
+        )}
       </div>
 
-      <div className="mt-5">
-        <PrintableSheetButton printableUrl={experiment.printableUrl} />
-      </div>
+      {experiment.printableUrl && (
+        <div className="mt-5">
+          <PrintableSheetButton printableUrl={experiment.printableUrl} />
+        </div>
+      )}
     </article>
   );
 }

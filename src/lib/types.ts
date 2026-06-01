@@ -6,8 +6,9 @@ export type Experiment = {
   title: string;
   objective: string;
   instructions: string;
-  materials: string;
-  printableUrl: string;
+  materials: string | null;
+  printableUrl: string | null;
+  status: "draft" | "published" | "archived";
 };
 
 export type GroupScore = {

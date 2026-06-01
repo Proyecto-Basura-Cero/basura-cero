@@ -9,7 +9,8 @@ export const experiments: Experiment[] = Array.from({ length: 52 }, (_, index) =
     objective: "Separar residuos y reducir basura en el aula.",
     instructions: "Separa residuos en estaciones, mide resultados y reflexiona en equipo.",
     materials: "Botes etiquetados, hojas de registro, guantes, etiquetas de colores.",
-    printableUrl: `/fichas/semana-${weekNumber}.pdf`
+    printableUrl: `/fichas/semana-${weekNumber}.pdf`,
+    status: "published" as const
   };
 });
 
