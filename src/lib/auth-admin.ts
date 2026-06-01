@@ -1,0 +1,83 @@
+import { cookies } from "next/headers";
+import { NextResponse } from "next/server";
+import { createServerSupabase } from "@/lib/supabase/server";
+import type { Role } from "@/lib/types";
+
+export type AdminSession = {
+  userId: string;
+  role: Role;
+  schoolId: string | null;
+};
+
+export class HttpError extends Error {
+  constructor(public status: number, message: string) {
+    super(message);
+  }
+}
+
+export async function getAdminSession(): Promise<AdminSession | null> {
+  const store = await cookies();
+  const role = store.get("role")?.value as Role | undefined;
+  const userId = store.get("userId")?.value;
+  if (!role || !userId) return null;
+  if (role !== "admin") return null;
+  return {
+    userId,
+    role,
+    schoolId: store.get("schoolId")?.value ?? null
+  };
+}
+
+export async function requireAdmin(): Promise<AdminSession> {
+  const session = await getAdminSession();
+  if (!session) {
+    throw new HttpError(401, "No autorizado");
+  }
+  return session;
+}
+
+export async function requireAdminWithSchool(): Promise<
+  AdminSession & { schoolId: string }
+> {
+  const session = await requireAdmin();
+
+  if (session.schoolId) {
+    return { ...session, schoolId: session.schoolId };
+  }
+
+  const supabase = createServerSupabase();
+  const { data, error } = await supabase
+    .from("users")
+    .select("school_id")
+    .eq("id", session.userId)
+    .maybeSingle();
+
+  if (error) throw new HttpError(500, error.message);
+  if (!data?.school_id) {
+    throw new HttpError(
+      400,
+      "Tu cuenta de admin no tiene school_id. Asigna uno en public.users."
+    );
+  }
+
+  return { ...session, schoolId: data.school_id as string };
+}
+
+export function jsonError(error: unknown): NextResponse {
+  if (error instanceof HttpError) {
+    return NextResponse.json({ error: error.message }, { status: error.status });
+  }
+  const message = error instanceof Error ? error.message : "Error inesperado";
+  return NextResponse.json({ error: message }, { status: 500 });
+}
+
+export function generateTempPassword(length = 12): string {
+  const alphabet = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789";
+  const bytes = new Uint8Array(length);
+  crypto.getRandomValues(bytes);
+  let out = "";
+  for (let i = 0; i < length; i += 1) {
+    out += alphabet[bytes[i] % alphabet.length];
+  }
+  return out;
+}

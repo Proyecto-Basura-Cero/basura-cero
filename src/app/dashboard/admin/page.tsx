@@ -16,6 +16,9 @@ export default async function AdminDashboardPage() {
           ]}
         />
         <div className="grid gap-3 sm:grid-cols-2">
+          <Link href="/dashboard/admin/usuarios" className="rounded-xl border bg-white p-4">
+            Usuarios (maestros, grupos, jurado)
+          </Link>
           <Link href="/dashboard/admin/evidencias" className="rounded-xl border bg-white p-4">
             Revisar evidencias
           </Link>
