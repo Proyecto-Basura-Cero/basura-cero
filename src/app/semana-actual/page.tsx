@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { Route } from "next";
 import { QrAccessCard } from "@/components/qr/qr-access-card";
 import { getCurrentChallengeForSchool } from "@/lib/services/current-challenge";
 import { resolveRankingSchoolId } from "@/lib/services/group-ranking";
@@ -29,7 +30,7 @@ export default async function CurrentWeekPage() {
     );
   }
 
-  const currentUrl = `/experimentos/${challenge.weekNumber}`;
+  const currentUrl = `/experimentos/${challenge.weekNumber}` as Route;
 
   return (
     <div className="grid gap-6 lg:grid-cols-[2fr,1fr]">
