@@ -1,7 +1,7 @@
 import Link from "next/link";
 import type { Route } from "next";
 import { QrAccessCard } from "@/components/qr/qr-access-card";
-import { getCurrentChallengeForSchool } from "@/lib/services/current-challenge";
+import { getFeaturedChallenge } from "@/lib/services/current-challenge";
 import { resolveRankingSchoolId } from "@/lib/services/group-ranking";
 import { toAbsoluteUrl } from "@/lib/site-url";
 
@@ -9,9 +9,7 @@ export const dynamic = "force-dynamic";
 
 export default async function CurrentWeekPage() {
   const schoolId = await resolveRankingSchoolId();
-  const challenge = schoolId
-    ? await getCurrentChallengeForSchool(schoolId)
-    : null;
+  const challenge = await getFeaturedChallenge(schoolId);
 
   if (!challenge) {
     return (

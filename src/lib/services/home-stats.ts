@@ -1,8 +1,4 @@
 import { createServerSupabase } from "@/lib/supabase/server";
-import {
-  getCurrentChallengeForSchool,
-  type CurrentChallenge
-} from "@/lib/services/current-challenge";
 
 export type HomeKpiData = {
   publishedExperiments: number;
@@ -10,41 +6,6 @@ export type HomeKpiData = {
   totalKgSeparated: number;
   totalEvidence: number;
 };
-
-export async function getFeaturedChallenge(
-  schoolId?: string
-): Promise<CurrentChallenge | null> {
-  if (schoolId) {
-    return getCurrentChallengeForSchool(schoolId);
-  }
-
-  const supabase = createServerSupabase();
-  const { data, error } = await supabase
-    .from("weekly_challenges")
-    .select(
-      "id, start_date, end_date, experiment_id, experiments(week_number, title, objective, instructions, materials, printable_url)"
-    )
-    .eq("is_current", true)
-    .limit(1)
-    .maybeSingle();
-
-  if (error || !data) return null;
-  const exp = Array.isArray(data.experiments) ? data.experiments[0] : data.experiments;
-  if (!exp) return null;
-
-  return {
-    id: data.id,
-    startDate: data.start_date,
-    endDate: data.end_date,
-    experimentId: data.experiment_id,
-    weekNumber: exp.week_number,
-    title: exp.title,
-    objective: exp.objective,
-    instructions: exp.instructions ?? null,
-    materials: exp.materials ?? null,
-    printableUrl: exp.printable_url ?? null
-  };
-}
 
 export async function getHomeKpis(schoolId?: string): Promise<HomeKpiData> {
   const supabase = createServerSupabase();

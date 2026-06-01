@@ -2,7 +2,8 @@ import Link from "next/link";
 import { WeekHeroCard } from "@/components/landing/week-hero-card";
 import { KpiTiles } from "@/components/metrics/kpi-tiles";
 import { formatAdminKpiValue } from "@/lib/services/admin-kpis";
-import { getFeaturedChallenge, getHomeKpis } from "@/lib/services/home-stats";
+import { getFeaturedChallenge } from "@/lib/services/current-challenge";
+import { getHomeKpis } from "@/lib/services/home-stats";
 import { resolveRankingSchoolId } from "@/lib/services/group-ranking";
 
 export const dynamic = "force-dynamic";
