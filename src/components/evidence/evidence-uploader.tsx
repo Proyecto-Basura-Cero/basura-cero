@@ -54,6 +54,14 @@ export function EvidenceUploader() {
         const gPayload = await gRes.json();
         const cPayload = await cRes.json();
         if (cancelled) return;
+
+        if (gRes.status === 401 || cRes.status === 401) {
+          setError("Tu sesion expiro. Vuelve a iniciar sesion para subir evidencias.");
+          setChallenge(null);
+          setGroups([]);
+          return;
+        }
+
         if (!gRes.ok) throw new Error(gPayload.error ?? "No se pudieron cargar los grupos");
         if (!cRes.ok) throw new Error(cPayload.error ?? "No se pudo cargar el reto");
         setGroups(gPayload.data ?? []);
@@ -218,7 +226,8 @@ export function EvidenceUploader() {
           </p>
         ) : (
           <p className="text-xs text-amber-700">
-            No hay reto activo. Pidele al admin que active uno.
+            No hay reto activo en tu escuela. El administrador debe activar la semana
+            actual.
           </p>
         )}
       </header>

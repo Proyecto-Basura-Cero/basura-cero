@@ -23,7 +23,14 @@ const ROLE_REDIRECT: Record<Role, Route> = {
   jury: "/jurado"
 };
 
-export function LoginForm() {
+function resolveReturnPath(nextPath?: string): Route | null {
+  if (!nextPath || !nextPath.startsWith("/") || nextPath.startsWith("//")) {
+    return null;
+  }
+  return nextPath as Route;
+}
+
+export function LoginForm({ nextPath }: { nextPath?: string }) {
   const router = useRouter();
   const [serverError, setServerError] = useState<string | null>(null);
 
@@ -66,9 +73,10 @@ export function LoginForm() {
       role: Role;
       mustChangePassword?: boolean;
     };
+    const returnPath = resolveReturnPath(nextPath);
     const destination: Route = payload.mustChangePassword
       ? "/cuenta/cambiar-contrasena"
-      : ROLE_REDIRECT[payload.role] ?? "/";
+      : returnPath ?? ROLE_REDIRECT[payload.role] ?? "/";
     router.replace(destination);
     router.refresh();
   };

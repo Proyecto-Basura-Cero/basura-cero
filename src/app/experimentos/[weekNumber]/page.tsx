@@ -1,6 +1,9 @@
 import { notFound } from "next/navigation";
 import { ExperimentDetailCard } from "@/components/experiments/experiment-detail-card";
 import { EvidenceUploader } from "@/components/evidence/evidence-uploader";
+import { EvidenceLoginPrompt } from "@/components/evidence/evidence-login-prompt";
+import { EvidenceRoleNotice } from "@/components/evidence/evidence-role-notice";
+import { getSession } from "@/lib/auth";
 import { getPublishedExperimentByWeekNumber } from "@/lib/services/experiments";
 
 export const dynamic = "force-dynamic";
@@ -27,10 +30,19 @@ export default async function ExperimentPage({ params }: ExperimentPageProps) {
     notFound();
   }
 
+  const session = await getSession();
+  const returnPath = `/experimentos/${week}`;
+
   return (
     <div className="space-y-6">
       <ExperimentDetailCard experiment={experiment} />
-      <EvidenceUploader />
+      {!session ? (
+        <EvidenceLoginPrompt returnPath={returnPath} />
+      ) : session.role === "teacher" || session.role === "admin" ? (
+        <EvidenceUploader />
+      ) : (
+        <EvidenceRoleNotice role={session.role} />
+      )}
     </div>
   );
 }
