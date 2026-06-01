@@ -5,6 +5,7 @@ import {
   getGroupRanking,
   resolveRankingSchoolId
 } from "@/lib/services/group-ranking";
+import { getWeeklyImpactChart } from "@/lib/services/admin-reports";
 
 export const dynamic = "force-dynamic";
 
@@ -12,11 +13,16 @@ export default async function JuryPage() {
   const schoolId = await resolveRankingSchoolId();
 
   let rows: Awaited<ReturnType<typeof getGroupRanking>> = [];
+  let weekly: Awaited<ReturnType<typeof getWeeklyImpactChart>> = [];
   if (schoolId) {
     try {
-      rows = await getGroupRanking({ schoolId });
+      [rows, weekly] = await Promise.all([
+        getGroupRanking({ schoolId }),
+        getWeeklyImpactChart(schoolId)
+      ]);
     } catch {
       rows = [];
+      weekly = [];
     }
   }
 
@@ -28,7 +34,7 @@ export default async function JuryPage() {
           Consulta de resultados e impacto en modo solo lectura.
         </p>
         <LeaderboardTable rows={rows} />
-        <ImpactCharts />
+        <ImpactCharts data={weekly} />
       </div>
     </RoleGuard>
   );

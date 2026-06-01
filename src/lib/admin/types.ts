@@ -14,7 +14,10 @@ export type AdminEvidenceRow = {
 
 export type AdminReportRow = {
   group: string;
+  grade: string;
+  rank: number;
   points: number;
+  completedWeeks: number;
   kgSeparated: number;
   participants: number;
 };
