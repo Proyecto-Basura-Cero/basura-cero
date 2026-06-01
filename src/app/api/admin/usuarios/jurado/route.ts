@@ -71,7 +71,8 @@ export async function POST(request: Request) {
       school_id: session.schoolId,
       email: parsed.data.email,
       role: "jury",
-      is_active: true
+      is_active: true,
+      must_change_password: true
     });
 
     if (insertError) {

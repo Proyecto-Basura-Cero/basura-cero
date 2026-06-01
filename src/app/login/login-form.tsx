@@ -62,8 +62,13 @@ export function LoginForm() {
       return;
     }
 
-    const payload = (await response.json()) as { role: Role };
-    const destination: Route = ROLE_REDIRECT[payload.role] ?? "/";
+    const payload = (await response.json()) as {
+      role: Role;
+      mustChangePassword?: boolean;
+    };
+    const destination: Route = payload.mustChangePassword
+      ? "/cuenta/cambiar-contrasena"
+      : ROLE_REDIRECT[payload.role] ?? "/";
     router.replace(destination);
     router.refresh();
   };

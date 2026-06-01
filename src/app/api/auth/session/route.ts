@@ -28,7 +28,7 @@ export async function POST(request: Request) {
 
   const { data: profile, error: profileError } = await supabase
     .from("users")
-    .select("role, school_id, is_active")
+    .select("role, school_id, is_active, must_change_password")
     .eq("id", userData.user.id)
     .maybeSingle();
 
@@ -71,10 +71,18 @@ export async function POST(request: Request) {
     cookieStore.delete("schoolId");
   }
 
+  const mustChange = profile.must_change_password === true;
+  if (mustChange) {
+    cookieStore.set("mustChangePassword", "true", baseOptions);
+  } else {
+    cookieStore.delete("mustChangePassword");
+  }
+
   return NextResponse.json({
     role: profile.role as Role,
     schoolId: profile.school_id ?? null,
-    userId: userData.user.id
+    userId: userData.user.id,
+    mustChangePassword: mustChange
   });
 }
 
@@ -83,5 +91,6 @@ export async function DELETE() {
   cookieStore.delete("role");
   cookieStore.delete("userId");
   cookieStore.delete("schoolId");
+  cookieStore.delete("mustChangePassword");
   return NextResponse.json({ ok: true });
 }

@@ -78,8 +78,8 @@ function CredentialCallout({
     <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-sm">
       <p className="font-semibold text-emerald-800">Usuario creado</p>
       <p className="mt-1 text-emerald-900">
-        Entrega estas credenciales temporales una sola vez. El usuario debera
-        cambiarlas en su primer ingreso (cuando habilitemos esa pantalla).
+        Entrega estas credenciales temporales una sola vez. En el primer ingreso
+        el usuario debera elegir una contrasena personal antes de acceder al panel.
       </p>
       <dl className="mt-3 grid gap-1 sm:grid-cols-[120px_1fr]">
         <dt className="text-emerald-700">Correo</dt>
