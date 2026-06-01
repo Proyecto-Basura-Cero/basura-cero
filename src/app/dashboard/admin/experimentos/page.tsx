@@ -13,7 +13,7 @@ export default function AdminExperimentsPage() {
           </h1>
           <p className="text-sm text-slate-600">
             Edita titulo, objetivo, materiales, instrucciones, video, dato
-            curioso, conclusion, materiales y ficha PDF. Solo los experimentos
+            curioso, conclusión, materiales y ficha PDF. Solo los experimentos
             publicados aparecen en la biblioteca publica.
           </p>
         </header>

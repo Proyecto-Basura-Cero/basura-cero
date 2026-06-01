@@ -47,7 +47,7 @@ export function ExperimentDetailCard({ experiment }: { experiment: Experiment })
 
       <section className="mt-4 rounded-xl border border-emerald-200 bg-emerald-50 p-4">
         <h3 className="text-sm font-semibold uppercase tracking-wide text-emerald-800">
-          Conclusion
+          Conclusión
         </h3>
         <p className="mt-2 whitespace-pre-line text-sm text-emerald-900">
           {experiment.conclusion}

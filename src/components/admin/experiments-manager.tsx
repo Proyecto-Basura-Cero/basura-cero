@@ -297,7 +297,7 @@ export function ExperimentsManager() {
         />
       </label>
       <label className="text-sm sm:col-span-2">
-        <span className="block text-slate-600">Conclusion</span>
+        <span className="block text-slate-600">Conclusión</span>
         <textarea
           required
           rows={3}

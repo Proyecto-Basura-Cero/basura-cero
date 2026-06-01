@@ -11,7 +11,7 @@ const createSchema = z.object({
   objective: z.string().min(5),
   instructions: z.string().min(5),
   curiousFact: z.string().min(5, "El dato curioso es obligatorio"),
-  conclusion: z.string().min(5, "La conclusion es obligatoria"),
+  conclusion: z.string().min(5, "La conclusión es obligatoria"),
   materials: z.string().optional(),
   printableUrl: z.string().optional(),
   videoUrl: z.string().nullable().optional(),
