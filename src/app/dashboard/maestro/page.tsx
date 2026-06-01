@@ -6,15 +6,17 @@ import { EvidenceUploader } from "@/components/evidence/evidence-uploader";
 import { BadgeGrid } from "@/components/gamification/badge-grid";
 import { getSession } from "@/lib/auth";
 import { getCurrentChallengeForSchool } from "@/lib/services/current-challenge";
+import { getTeacherDashboardStats } from "@/lib/services/teacher-dashboard";
 
 export const dynamic = "force-dynamic";
 
 export default async function TeacherDashboardPage() {
   const session = await getSession();
   const schoolId = session?.schoolId ?? null;
-  const challenge = schoolId
-    ? await getCurrentChallengeForSchool(schoolId)
-    : null;
+  const [challenge, stats] = await Promise.all([
+    schoolId ? getCurrentChallengeForSchool(schoolId) : Promise.resolve(null),
+    getTeacherDashboardStats()
+  ]);
 
   return (
     <RoleGuard allow={["teacher", "admin"]}>
@@ -77,9 +79,12 @@ export default async function TeacherDashboardPage() {
           </section>
         )}
 
-        <ProgressRing52Weeks completed={18} />
+        <ProgressRing52Weeks completed={stats.completedWeeks} />
         <EvidenceUploader />
-        <BadgeGrid />
+        <section className="space-y-3">
+          <h2 className="text-lg font-bold text-emerald-700">Insignias de tus grupos</h2>
+          <BadgeGrid badges={stats.badges} />
+        </section>
       </div>
     </RoleGuard>
   );
