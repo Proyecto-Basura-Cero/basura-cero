@@ -10,6 +10,8 @@ export const experiments: Experiment[] = Array.from({ length: 52 }, (_, index) =
     instructions: "Separa residuos en estaciones, mide resultados y reflexiona en equipo.",
     materials: "Botes etiquetados, hojas de registro, guantes, etiquetas de colores.",
     printableUrl: `/fichas/semana-${weekNumber}.pdf`,
+    curiousFact: "Reciclar una tonelada de papel salva cerca de 17 arboles.",
+    conclusion: "Aprendimos que separar residuos en el aula reduce basura y cuida el planeta.",
     status: "published" as const
   };
 });

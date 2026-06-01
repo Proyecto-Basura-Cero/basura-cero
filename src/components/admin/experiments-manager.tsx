@@ -12,6 +12,8 @@ type Experiment = {
   instructions: string;
   materials: string | null;
   printableUrl: string | null;
+  curiousFact: string;
+  conclusion: string;
   status: ExperimentStatus;
 };
 
@@ -20,6 +22,8 @@ type FormState = {
   title: string;
   objective: string;
   instructions: string;
+  curiousFact: string;
+  conclusion: string;
   materials: string;
   printableUrl: string;
   status: ExperimentStatus;
@@ -30,6 +34,8 @@ const EMPTY_FORM: FormState = {
   title: "",
   objective: "",
   instructions: "",
+  curiousFact: "",
+  conclusion: "",
   materials: "",
   printableUrl: "",
   status: "draft"
@@ -111,6 +117,8 @@ export function ExperimentsManager() {
       title: experiment.title,
       objective: experiment.objective,
       instructions: experiment.instructions,
+      curiousFact: experiment.curiousFact,
+      conclusion: experiment.conclusion,
       materials: experiment.materials ?? "",
       printableUrl: experiment.printableUrl ?? "",
       status: experiment.status
@@ -129,6 +137,8 @@ export function ExperimentsManager() {
         title: createForm.title,
         objective: createForm.objective,
         instructions: createForm.instructions,
+        curiousFact: createForm.curiousFact,
+        conclusion: createForm.conclusion,
         materials: createForm.materials || undefined,
         printableUrl: createForm.printableUrl || undefined,
         status: createForm.status
@@ -156,6 +166,8 @@ export function ExperimentsManager() {
         title: editForm.title,
         objective: editForm.objective,
         instructions: editForm.instructions,
+        curiousFact: editForm.curiousFact,
+        conclusion: editForm.conclusion,
         materials: editForm.materials || null,
         printableUrl: editForm.printableUrl || null,
         status: editForm.status
@@ -254,6 +266,28 @@ export function ExperimentsManager() {
           rows={4}
           value={form.instructions}
           onChange={(e) => setForm({ ...form, instructions: e.target.value })}
+          className="mt-1 w-full rounded border border-slate-300 px-2 py-1"
+        />
+      </label>
+      <label className="text-sm sm:col-span-2">
+        <span className="block text-slate-600">Dato curioso</span>
+        <textarea
+          required
+          rows={2}
+          value={form.curiousFact}
+          onChange={(e) => setForm({ ...form, curiousFact: e.target.value })}
+          placeholder="Informacion util o dato interesante relacionado con el experimento"
+          className="mt-1 w-full rounded border border-slate-300 px-2 py-1"
+        />
+      </label>
+      <label className="text-sm sm:col-span-2">
+        <span className="block text-slate-600">Conclusion</span>
+        <textarea
+          required
+          rows={3}
+          value={form.conclusion}
+          onChange={(e) => setForm({ ...form, conclusion: e.target.value })}
+          placeholder="Que aprendio el grupo al completar este experimento"
           className="mt-1 w-full rounded border border-slate-300 px-2 py-1"
         />
       </label>

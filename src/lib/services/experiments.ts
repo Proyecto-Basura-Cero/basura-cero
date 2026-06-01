@@ -9,6 +9,8 @@ type ExperimentRow = {
   instructions: string;
   materials: string | null;
   printable_url: string | null;
+  curious_fact: string;
+  conclusion: string;
   status: Experiment["status"];
 };
 
@@ -21,12 +23,14 @@ function mapExperiment(row: ExperimentRow): Experiment {
     instructions: row.instructions,
     materials: row.materials,
     printableUrl: row.printable_url,
+    curiousFact: row.curious_fact,
+    conclusion: row.conclusion,
     status: row.status
   };
 }
 
 const SELECT_FIELDS =
-  "id, week_number, title, objective, instructions, materials, printable_url, status";
+  "id, week_number, title, objective, instructions, materials, printable_url, curious_fact, conclusion, status";
 
 export async function getExperiments(options?: {
   status?: Experiment["status"] | Experiment["status"][];

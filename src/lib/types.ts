@@ -8,6 +8,8 @@ export type Experiment = {
   instructions: string;
   materials: string | null;
   printableUrl: string | null;
+  curiousFact: string;
+  conclusion: string;
   status: "draft" | "published" | "archived";
 };
 

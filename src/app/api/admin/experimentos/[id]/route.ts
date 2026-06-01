@@ -9,6 +9,8 @@ const updateSchema = z.object({
   title: z.string().min(2).optional(),
   objective: z.string().min(5).optional(),
   instructions: z.string().min(5).optional(),
+  curiousFact: z.string().min(5).optional(),
+  conclusion: z.string().min(5).optional(),
   materials: z.string().nullable().optional(),
   printableUrl: z.string().nullable().optional(),
   status: statusSchema.optional()
@@ -35,6 +37,12 @@ export async function PATCH(
     if (parsed.data.objective !== undefined) updates.objective = parsed.data.objective;
     if (parsed.data.instructions !== undefined) {
       updates.instructions = parsed.data.instructions;
+    }
+    if (parsed.data.curiousFact !== undefined) {
+      updates.curious_fact = parsed.data.curiousFact;
+    }
+    if (parsed.data.conclusion !== undefined) {
+      updates.conclusion = parsed.data.conclusion;
     }
     if (parsed.data.materials !== undefined) updates.materials = parsed.data.materials;
     if (parsed.data.printableUrl !== undefined) {

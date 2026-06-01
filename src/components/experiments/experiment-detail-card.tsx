@@ -18,6 +18,20 @@ export function ExperimentDetailCard({ experiment }: { experiment: Experiment })
         )}
       </div>
 
+      <section className="mt-5 rounded-xl border border-sky-200 bg-sky-50 p-4">
+        <h3 className="text-sm font-semibold uppercase tracking-wide text-sky-800">
+          Dato curioso
+        </h3>
+        <p className="mt-2 text-sm text-sky-900">{experiment.curiousFact}</p>
+      </section>
+
+      <section className="mt-4 rounded-xl border border-emerald-200 bg-emerald-50 p-4">
+        <h3 className="text-sm font-semibold uppercase tracking-wide text-emerald-800">
+          Conclusion
+        </h3>
+        <p className="mt-2 text-sm text-emerald-900">{experiment.conclusion}</p>
+      </section>
+
       {experiment.printableUrl && (
         <div className="mt-5">
           <PrintableSheetButton printableUrl={experiment.printableUrl} />
