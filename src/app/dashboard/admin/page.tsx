@@ -19,6 +19,9 @@ export default async function AdminDashboardPage() {
           <Link href="/dashboard/admin/usuarios" className="rounded-xl border bg-white p-4">
             Usuarios (maestros, grupos, jurado)
           </Link>
+          <Link href="/dashboard/admin/semanas" className="rounded-xl border bg-white p-4">
+            Activacion semanal
+          </Link>
           <Link href="/dashboard/admin/evidencias" className="rounded-xl border bg-white p-4">
             Revisar evidencias
           </Link>
