@@ -1,29 +1,57 @@
+import { Suspense } from "react";
 import { RoleGuard } from "@/components/auth/role-guard";
+import { AdminRankingFilters } from "@/components/admin/admin-ranking-filters";
 import { LeaderboardTable } from "@/components/gamification/leaderboard-table";
+import { getAdminSchoolId } from "@/lib/auth-admin";
+import {
+  getDistinctGrades,
+  getGroupRanking
+} from "@/lib/services/group-ranking";
 
-export default async function AdminRankingPage() {
+export const dynamic = "force-dynamic";
+
+type Props = {
+  searchParams: Promise<{ grade?: string }>;
+};
+
+export default async function AdminRankingPage({ searchParams }: Props) {
+  const { grade } = await searchParams;
+  const schoolId = await getAdminSchoolId();
+
+  let rows: Awaited<ReturnType<typeof getGroupRanking>> = [];
+  let grades: string[] = [];
+
+  if (schoolId) {
+    try {
+      [rows, grades] = await Promise.all([
+        getGroupRanking({ schoolId, grade: grade || undefined }),
+        getDistinctGrades(schoolId)
+      ]);
+    } catch {
+      rows = [];
+      grades = [];
+    }
+  }
+
   return (
     <RoleGuard allow={["admin"]}>
       <div className="space-y-4">
-        <h1 className="text-2xl font-bold text-emerald-700">Ranking por filtros</h1>
-        <form className="grid gap-3 rounded-2xl border bg-white p-4 md:grid-cols-3">
-          <select className="rounded border p-2">
-            <option>Todos los grados</option>
-            <option>3ro</option>
-            <option>4to</option>
-            <option>5to</option>
-            <option>6to</option>
-          </select>
-          <select className="rounded border p-2">
-            <option>Periodo actual</option>
-            <option>Mensual</option>
-            <option>Trimestral</option>
-          </select>
-          <button className="rounded bg-emerald-600 px-3 py-2 text-white" type="button">
-            Aplicar filtros
-          </button>
-        </form>
-        <LeaderboardTable />
+        <header className="space-y-1">
+          <h1 className="text-2xl font-bold text-emerald-700">Ranking por filtros</h1>
+          <p className="text-sm text-slate-600">
+            Puntaje acumulado por grupo segun evidencias enviadas y aprobadas.
+          </p>
+        </header>
+        <Suspense
+          fallback={
+            <div className="rounded-2xl border bg-white p-4 text-sm text-slate-500">
+              Cargando filtros...
+            </div>
+          }
+        >
+          <AdminRankingFilters grades={grades} currentGrade={grade} />
+        </Suspense>
+        <LeaderboardTable rows={rows} />
       </div>
     </RoleGuard>
   );
