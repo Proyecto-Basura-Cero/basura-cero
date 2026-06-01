@@ -36,14 +36,8 @@ export async function requireAdmin(): Promise<AdminSession> {
   return session;
 }
 
-export async function requireAdminWithSchool(): Promise<
-  AdminSession & { schoolId: string }
-> {
-  const session = await requireAdmin();
-
-  if (session.schoolId) {
-    return { ...session, schoolId: session.schoolId };
-  }
+async function resolveSchoolId(session: AdminSession): Promise<string | null> {
+  if (session.schoolId) return session.schoolId;
 
   const supabase = createServerSupabase();
   const { data, error } = await supabase
@@ -53,14 +47,29 @@ export async function requireAdminWithSchool(): Promise<
     .maybeSingle();
 
   if (error) throw new HttpError(500, error.message);
-  if (!data?.school_id) {
+  return (data?.school_id as string | null) ?? null;
+}
+
+export async function getAdminSchoolId(): Promise<string | null> {
+  const session = await getAdminSession();
+  if (!session) return null;
+  return resolveSchoolId(session);
+}
+
+export async function requireAdminWithSchool(): Promise<
+  AdminSession & { schoolId: string }
+> {
+  const session = await requireAdmin();
+  const schoolId = await resolveSchoolId(session);
+
+  if (!schoolId) {
     throw new HttpError(
       400,
       "Tu cuenta de admin no tiene school_id. Asigna uno en public.users."
     );
   }
 
-  return { ...session, schoolId: data.school_id as string };
+  return { ...session, schoolId };
 }
 
 export function jsonError(error: unknown): NextResponse {
