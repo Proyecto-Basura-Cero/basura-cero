@@ -3,6 +3,7 @@ import type { Route } from "next";
 import { QrAccessCard } from "@/components/qr/qr-access-card";
 import { getCurrentChallengeForSchool } from "@/lib/services/current-challenge";
 import { resolveRankingSchoolId } from "@/lib/services/group-ranking";
+import { toAbsoluteUrl } from "@/lib/site-url";
 
 export const dynamic = "force-dynamic";
 
@@ -30,7 +31,8 @@ export default async function CurrentWeekPage() {
     );
   }
 
-  const currentUrl = `/experimentos/${challenge.weekNumber}` as Route;
+  const currentPath = `/experimentos/${challenge.weekNumber}` as Route;
+  const qrUrl = await toAbsoluteUrl(currentPath);
 
   return (
     <div className="grid gap-6 lg:grid-cols-[2fr,1fr]">
@@ -45,7 +47,7 @@ export default async function CurrentWeekPage() {
         </p>
         <div className="mt-5 flex flex-wrap gap-3">
           <Link
-            href={currentUrl}
+            href={currentPath}
             className="rounded-xl bg-emerald-600 px-4 py-2 text-sm font-semibold text-white"
           >
             Ver detalle
@@ -62,7 +64,7 @@ export default async function CurrentWeekPage() {
           )}
         </div>
       </section>
-      <QrAccessCard url={currentUrl} />
+      <QrAccessCard url={qrUrl} />
     </div>
   );
 }
