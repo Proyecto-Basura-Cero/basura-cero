@@ -1,4 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
+import { sanitizeSupabaseUrl } from "./url";
 
 export function createServerSupabase() {
   const rawUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -8,7 +9,7 @@ export function createServerSupabase() {
     throw new Error("Missing Supabase server environment variables");
   }
 
-  const supabaseUrl = rawUrl.trim().replace(/\/+$/, "");
+  const supabaseUrl = sanitizeSupabaseUrl(rawUrl);
   const serviceRole = rawServiceRole.trim();
 
   return createClient(supabaseUrl, serviceRole, {
