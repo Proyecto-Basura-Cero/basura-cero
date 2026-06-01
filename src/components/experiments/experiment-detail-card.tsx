@@ -8,14 +8,14 @@ export function ExperimentDetailCard({ experiment }: { experiment: Experiment })
       <p className="mt-2 text-sm text-slate-700">{experiment.objective}</p>
 
       <div className="mt-4 space-y-3 text-sm">
-        <p>
-          <span className="font-semibold">Instrucciones:</span> {experiment.instructions}
-        </p>
         {experiment.materials && (
           <p>
             <span className="font-semibold">Materiales:</span> {experiment.materials}
           </p>
         )}
+        <p>
+          <span className="font-semibold">Instrucciones:</span> {experiment.instructions}
+        </p>
       </div>
 
       <section className="mt-5 rounded-xl border border-sky-200 bg-sky-50 p-4">

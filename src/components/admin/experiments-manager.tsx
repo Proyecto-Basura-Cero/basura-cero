@@ -260,6 +260,15 @@ export function ExperimentsManager() {
         />
       </label>
       <label className="text-sm sm:col-span-2">
+        <span className="block text-slate-600">Materiales</span>
+        <textarea
+          rows={2}
+          value={form.materials}
+          onChange={(e) => setForm({ ...form, materials: e.target.value })}
+          className="mt-1 w-full rounded border border-slate-300 px-2 py-1"
+        />
+      </label>
+      <label className="text-sm sm:col-span-2">
         <span className="block text-slate-600">Instrucciones</span>
         <textarea
           required
@@ -288,15 +297,6 @@ export function ExperimentsManager() {
           value={form.conclusion}
           onChange={(e) => setForm({ ...form, conclusion: e.target.value })}
           placeholder="Que aprendio el grupo al completar este experimento"
-          className="mt-1 w-full rounded border border-slate-300 px-2 py-1"
-        />
-      </label>
-      <label className="text-sm sm:col-span-2">
-        <span className="block text-slate-600">Materiales</span>
-        <textarea
-          rows={2}
-          value={form.materials}
-          onChange={(e) => setForm({ ...form, materials: e.target.value })}
           className="mt-1 w-full rounded border border-slate-300 px-2 py-1"
         />
       </label>
