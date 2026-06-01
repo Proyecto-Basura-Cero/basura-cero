@@ -58,18 +58,13 @@ export async function getHomeKpis(schoolId?: string): Promise<HomeKpiData> {
     .from("groups")
     .select("id", { count: "exact", head: true });
 
-  const summaryQuery = schoolId
-    ? supabase
-        .from("v_school_summary")
-        .select("total_kg_separated, total_submissions")
-        .eq("school_id", schoolId)
-        .maybeSingle()
-    : supabase
-        .from("v_school_summary")
-        .select("total_kg_separated, total_submissions");
+  let summaryQuery = supabase
+    .from("v_school_summary")
+    .select("total_kg_separated, total_submissions");
 
   if (schoolId) {
     groupsQuery.eq("school_id", schoolId);
+    summaryQuery = summaryQuery.eq("school_id", schoolId);
   }
 
   const [experimentsRes, groupsRes, summaryRes] = await Promise.all([
@@ -85,14 +80,9 @@ export async function getHomeKpis(schoolId?: string): Promise<HomeKpiData> {
   let totalKgSeparated = 0;
   let totalEvidence = 0;
 
-  if (schoolId) {
-    totalKgSeparated = Number(summaryRes.data?.total_kg_separated ?? 0);
-    totalEvidence = Number(summaryRes.data?.total_submissions ?? 0);
-  } else {
-    for (const row of summaryRes.data ?? []) {
-      totalKgSeparated += Number(row.total_kg_separated ?? 0);
-      totalEvidence += Number(row.total_submissions ?? 0);
-    }
+  for (const row of summaryRes.data ?? []) {
+    totalKgSeparated += Number(row.total_kg_separated ?? 0);
+    totalEvidence += Number(row.total_submissions ?? 0);
   }
 
   return {
