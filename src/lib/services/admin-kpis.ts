@@ -4,6 +4,7 @@ export type AdminKpiData = {
   activeGroups: number;
   pendingEvidence: number;
   totalKgSeparated: number;
+  totalReusedItems: number;
   totalPoints: number;
 };
 
@@ -24,7 +25,7 @@ export async function getAdminKpisForSchool(
       .eq("groups.school_id", schoolId),
     supabase
       .from("v_school_summary")
-      .select("total_kg_separated")
+      .select("total_kg_separated, total_reused_items")
       .eq("school_id", schoolId)
       .maybeSingle(),
     supabase
@@ -47,6 +48,7 @@ export async function getAdminKpisForSchool(
     activeGroups: groupsRes.count ?? 0,
     pendingEvidence: pendingRes.count ?? 0,
     totalKgSeparated: Number(summaryRes.data?.total_kg_separated ?? 0),
+    totalReusedItems: Number(summaryRes.data?.total_reused_items ?? 0),
     totalPoints
   };
 }

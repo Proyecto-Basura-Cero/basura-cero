@@ -16,6 +16,7 @@ export default async function HomePage() {
     publishedExperiments: 0,
     participatingGroups: 0,
     totalKgSeparated: 0,
+    totalReusedItems: 0,
     totalEvidence: 0
   };
 
@@ -44,6 +45,10 @@ export default async function HomePage() {
           {
             label: "Kg separados",
             value: formatAdminKpiValue(kpis.totalKgSeparated, 1)
+          },
+          {
+            label: "Materiales reutilizados",
+            value: formatAdminKpiValue(kpis.totalReusedItems)
           },
           {
             label: "Evidencias enviadas",

@@ -16,6 +16,7 @@ export default async function AdminDashboardPage() {
     { label: "Grupos activos", value: "0" },
     { label: "Evidencias por revisar", value: "0" },
     { label: "Kg separados", value: "0" },
+    { label: "Materiales reutilizados", value: "0" },
     { label: "Puntos acumulados", value: "0" }
   ];
 
@@ -31,6 +32,10 @@ export default async function AdminDashboardPage() {
         {
           label: "Kg separados",
           value: formatAdminKpiValue(kpis.totalKgSeparated, 1)
+        },
+        {
+          label: "Materiales reutilizados",
+          value: formatAdminKpiValue(kpis.totalReusedItems)
         },
         {
           label: "Puntos acumulados",

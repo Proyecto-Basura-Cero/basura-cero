@@ -14,7 +14,7 @@ export const adminEvidenceRows: AdminEvidenceRow[] = [
 ];
 
 export const adminReportRows: AdminReportRow[] = [
-  { group: "5A", grade: "5to", rank: 1, points: 860, completedWeeks: 8, kgSeparated: 78, participants: 32 },
-  { group: "4B", grade: "4to", rank: 2, points: 810, completedWeeks: 7, kgSeparated: 70, participants: 29 },
-  { group: "6C", grade: "6to", rank: 3, points: 790, completedWeeks: 7, kgSeparated: 69, participants: 31 }
+  { group: "5A", grade: "5to", rank: 1, points: 860, completedWeeks: 8, kgSeparated: 78, reusedItems: 24, participants: 32 },
+  { group: "4B", grade: "4to", rank: 2, points: 810, completedWeeks: 7, kgSeparated: 70, reusedItems: 18, participants: 29 },
+  { group: "6C", grade: "6to", rank: 3, points: 790, completedWeeks: 7, kgSeparated: 69, reusedItems: 15, participants: 31 }
 ];

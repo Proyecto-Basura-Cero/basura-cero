@@ -16,6 +16,7 @@ export function toCsv(rows: AdminReportRow[]): string {
     "points",
     "completed_weeks",
     "kg_separated",
+    "reused_items",
     "participants"
   ];
   const body = rows.map((row) => [
@@ -25,6 +26,7 @@ export function toCsv(rows: AdminReportRow[]): string {
     row.points,
     row.completedWeeks,
     row.kgSeparated,
+    row.reusedItems,
     row.participants
   ]);
   return [header, ...body]
@@ -46,6 +48,7 @@ export function toSimplePdfHtml(
           <td>${row.points}</td>
           <td>${row.completedWeeks}</td>
           <td>${row.kgSeparated.toFixed(1)}</td>
+          <td>${row.reusedItems}</td>
           <td>${row.participants}</td>
         </tr>`
     )
@@ -84,10 +87,11 @@ export function toSimplePdfHtml(
           <th>Puntos</th>
           <th>Semanas</th>
           <th>Kg separados</th>
+          <th>Materiales reutilizados</th>
           <th>Participantes</th>
         </tr>
       </thead>
-      <tbody>${trs || "<tr><td colspan='7'>Sin datos</td></tr>"}</tbody>
+      <tbody>${trs || "<tr><td colspan='8'>Sin datos</td></tr>"}</tbody>
     </table>
   </body>
 </html>`;

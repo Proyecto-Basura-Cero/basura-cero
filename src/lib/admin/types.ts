@@ -19,5 +19,6 @@ export type AdminReportRow = {
   points: number;
   completedWeeks: number;
   kgSeparated: number;
+  reusedItems: number;
   participants: number;
 };

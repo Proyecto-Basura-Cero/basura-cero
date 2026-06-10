@@ -37,6 +37,7 @@ export function ImpactCharts({ data }: Props) {
             <Tooltip />
             <Legend />
             <Bar dataKey="kg" name="Kg separados" fill="#2a9d5b" />
+            <Bar dataKey="reused" name="Materiales reutilizados" fill="#d97706" />
             <Bar dataKey="participants" name="Participantes" fill="#0284c7" />
           </BarChart>
         </ResponsiveContainer>

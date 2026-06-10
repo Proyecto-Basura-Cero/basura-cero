@@ -5,6 +5,7 @@ export type WeeklyImpactPoint = {
   week: string;
   weekNumber: number;
   kg: number;
+  reused: number;
   participants: number;
   submissions: number;
 };
@@ -33,7 +34,7 @@ export async function getAdminReportRows(
     supabase
       .from("groups")
       .select(
-        "id, name, submissions(status, participants_count, impact_metrics(kg_separated))"
+        "id, name, submissions(status, participants_count, impact_metrics(kg_separated, reused_items))"
       )
       .eq("school_id", schoolId)
   ]);
@@ -43,11 +44,12 @@ export async function getAdminReportRows(
 
   const metricsByGroup = new Map<
     string,
-    { kgSeparated: number; participants: number }
+    { kgSeparated: number; reusedItems: number; participants: number }
   >();
 
   for (const group of groupsRes.data ?? []) {
     let kgSeparated = 0;
+    let reusedItems = 0;
     let participants = 0;
     for (const submission of group.submissions ?? []) {
       if (!ACTIVE_STATUSES.includes(submission.status as (typeof ACTIVE_STATUSES)[number])) {
@@ -58,13 +60,15 @@ export async function getAdminReportRows(
         ? submission.impact_metrics[0]
         : submission.impact_metrics;
       kgSeparated += Number(metrics?.kg_separated ?? 0);
+      reusedItems += Number(metrics?.reused_items ?? 0);
     }
-    metricsByGroup.set(group.id, { kgSeparated, participants });
+    metricsByGroup.set(group.id, { kgSeparated, reusedItems, participants });
   }
 
   return (rankingRes.data ?? []).map((row) => {
     const metrics = metricsByGroup.get(row.group_id) ?? {
       kgSeparated: 0,
+      reusedItems: 0,
       participants: 0
     };
     return {
@@ -74,6 +78,7 @@ export async function getAdminReportRows(
       points: Number(row.total_points ?? 0),
       completedWeeks: Number(row.completed_weeks ?? 0),
       kgSeparated: metrics.kgSeparated,
+      reusedItems: metrics.reusedItems,
       participants: metrics.participants
     };
   });
@@ -85,7 +90,7 @@ export async function getWeeklyImpactChart(
   const supabase = createServerSupabase();
   const { data, error } = await supabase
     .from("v_weekly_impact")
-    .select("week_number, kg_separated, participants, submissions_count")
+    .select("week_number, kg_separated, reused_items, participants, submissions_count")
     .eq("school_id", schoolId)
     .order("week_number", { ascending: true });
 
@@ -95,6 +100,7 @@ export async function getWeeklyImpactChart(
     week: `S${row.week_number}`,
     weekNumber: Number(row.week_number),
     kg: Number(row.kg_separated ?? 0),
+    reused: Number(row.reused_items ?? 0),
     participants: Number(row.participants ?? 0),
     submissions: Number(row.submissions_count ?? 0)
   }));

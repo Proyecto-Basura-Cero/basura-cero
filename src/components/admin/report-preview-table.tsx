@@ -20,6 +20,7 @@ export function ReportPreviewTable({ rows }: { rows: AdminReportRow[] }) {
             <th className="px-4 py-2">Puntos</th>
             <th className="px-4 py-2">Semanas</th>
             <th className="px-4 py-2">Kg</th>
+            <th className="px-4 py-2">Reutilizados</th>
             <th className="px-4 py-2">Participantes</th>
           </tr>
         </thead>
@@ -32,6 +33,7 @@ export function ReportPreviewTable({ rows }: { rows: AdminReportRow[] }) {
               <td className="px-4 py-2">{row.points.toLocaleString("es-MX")}</td>
               <td className="px-4 py-2">{row.completedWeeks}</td>
               <td className="px-4 py-2">{row.kgSeparated.toFixed(1)}</td>
+              <td className="px-4 py-2">{row.reusedItems}</td>
               <td className="px-4 py-2">{row.participants}</td>
             </tr>
           ))}

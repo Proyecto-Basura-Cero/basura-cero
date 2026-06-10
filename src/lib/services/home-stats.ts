@@ -4,6 +4,7 @@ export type HomeKpiData = {
   publishedExperiments: number;
   participatingGroups: number;
   totalKgSeparated: number;
+  totalReusedItems: number;
   totalEvidence: number;
 };
 
@@ -21,7 +22,7 @@ export async function getHomeKpis(schoolId?: string): Promise<HomeKpiData> {
 
   let summaryQuery = supabase
     .from("v_school_summary")
-    .select("total_kg_separated, total_submissions");
+    .select("total_kg_separated, total_reused_items, total_submissions");
 
   if (schoolId) {
     groupsQuery.eq("school_id", schoolId);
@@ -39,10 +40,12 @@ export async function getHomeKpis(schoolId?: string): Promise<HomeKpiData> {
   if (summaryRes.error) throw summaryRes.error;
 
   let totalKgSeparated = 0;
+  let totalReusedItems = 0;
   let totalEvidence = 0;
 
   for (const row of summaryRes.data ?? []) {
     totalKgSeparated += Number(row.total_kg_separated ?? 0);
+    totalReusedItems += Number(row.total_reused_items ?? 0);
     totalEvidence += Number(row.total_submissions ?? 0);
   }
 
@@ -50,6 +53,7 @@ export async function getHomeKpis(schoolId?: string): Promise<HomeKpiData> {
     publishedExperiments: experimentsRes.count ?? 0,
     participatingGroups: groupsRes.count ?? 0,
     totalKgSeparated,
+    totalReusedItems,
     totalEvidence
   };
 }
