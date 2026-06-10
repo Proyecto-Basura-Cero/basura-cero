@@ -139,15 +139,13 @@ export async function POST(request: Request) {
     );
     if (filesError) throw filesError;
 
-    const { error: metricsError } = await supabase.from("impact_metrics").upsert(
-      {
-        submission_id: submissionId,
-        kg_separated: parsed.data.kgSeparated,
-        reused_items: parsed.data.reusedItems,
-        waste_reduced_estimate: parsed.data.kgSeparated
-      },
-      { onConflict: "submission_id" }
-    );
+    await supabase.from("impact_metrics").delete().eq("submission_id", submissionId);
+    const { error: metricsError } = await supabase.from("impact_metrics").insert({
+      submission_id: submissionId,
+      kg_separated: parsed.data.kgSeparated,
+      reused_items: parsed.data.reusedItems,
+      waste_reduced_estimate: parsed.data.kgSeparated
+    });
     if (metricsError) throw metricsError;
 
     if (parsed.data.status === "submitted") {

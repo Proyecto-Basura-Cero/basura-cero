@@ -1,5 +1,6 @@
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
+import { getErrorMessage } from "@/lib/error-message";
 import { createServerSupabase } from "@/lib/supabase/server";
 import type { Role } from "@/lib/types";
 
@@ -76,8 +77,7 @@ export function jsonError(error: unknown): NextResponse {
   if (error instanceof HttpError) {
     return NextResponse.json({ error: error.message }, { status: error.status });
   }
-  const message = error instanceof Error ? error.message : "Error inesperado";
-  return NextResponse.json({ error: message }, { status: 500 });
+  return NextResponse.json({ error: getErrorMessage(error) }, { status: 500 });
 }
 
 export function generateTempPassword(length = 12): string {

@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import { getErrorMessage } from "@/lib/error-message";
 import { supabaseClient } from "@/lib/supabase/client";
 
 type Group = { id: string; name: string; grade: string };
@@ -191,7 +192,7 @@ export function EvidenceUploader() {
         if (fileInputRef.current) fileInputRef.current.value = "";
         router.refresh();
       } catch (err) {
-        setError(err instanceof Error ? err.message : "Error inesperado");
+        setError(getErrorMessage(err));
       } finally {
         setSubmitting(false);
         setUploadProgress(null);
