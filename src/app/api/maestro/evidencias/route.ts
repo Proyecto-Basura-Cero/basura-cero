@@ -6,7 +6,10 @@ import {
   requireTeacherWithSchool
 } from "@/lib/auth-teacher";
 import { createServerSupabase } from "@/lib/supabase/server";
-import { scoreSubmission, assignBadges } from "@/lib/services/scoring-service";
+import {
+  recalcGroupSubmissionScore,
+  assignBadges
+} from "@/lib/services/scoring-service";
 
 const fileSchema = z.object({
   path: z.string().min(3),
@@ -29,7 +32,7 @@ export async function GET() {
     const session = await requireTeacherWithSchool();
     const supabase = createServerSupabase();
 
-    let query = supabase
+    const query = supabase
       .from("submissions")
       .select(
         "id, comments, participants_count, status, submitted_at, group_id, groups!inner(name, grade, school_id, teacher_id, teachers(user_id)), challenge_id, weekly_challenges(experiment_id, experiments(week_number, title)), scores(points_total), evidence_files(id)"
@@ -149,19 +152,9 @@ export async function POST(request: Request) {
     if (metricsError) throw metricsError;
 
     if (parsed.data.status === "submitted") {
-      const today = new Date().toISOString().slice(0, 10);
-      const isOnTime = today <= challenge.end_date;
-
-      await scoreSubmission(submissionId, {
-        participantsCount: parsed.data.participantsCount,
-        expectedParticipants: Math.max(parsed.data.participantsCount, 1),
-        kgSeparated: parsed.data.kgSeparated,
-        reusedItems: parsed.data.reusedItems,
-        creativityScore: 0,
-        teamworkScore: 0,
-        hasEvidenceFile: parsed.data.files.length > 0,
-        isOnTime
-      });
+      // Fuente de verdad unica: recalcula desde BD (metricas, archivos, reto,
+      // progreso agregado de alumnos y curva temporal por tramos).
+      await recalcGroupSubmissionScore(submissionId);
 
       const { data: groupSubs } = await supabase
         .from("submissions")

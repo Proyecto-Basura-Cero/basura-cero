@@ -21,7 +21,15 @@ export default async function TeacherDashboardPage() {
   return (
     <RoleGuard allow={["teacher", "admin"]}>
       <div className="space-y-6">
-        <h1 className="text-2xl font-bold text-emerald-700">Panel de maestro</h1>
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <h1 className="text-2xl font-bold text-emerald-700">Panel de maestro</h1>
+          <Link
+            href="/dashboard/maestro/alumnos"
+            className="rounded-lg border border-emerald-300 px-3 py-2 text-sm font-semibold text-emerald-700 hover:bg-emerald-50"
+          >
+            Gestionar alumnos
+          </Link>
+        </div>
 
         {challenge ? (
           <section className="rounded-2xl border border-emerald-200 bg-emerald-50 p-5">

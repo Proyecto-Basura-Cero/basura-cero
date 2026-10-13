@@ -4,8 +4,6 @@ import { z } from "zod";
 import { createServerSupabase } from "@/lib/supabase/server";
 import type { Role } from "@/lib/types";
 
-const COOKIE_MAX_AGE = 60 * 60 * 8;
-
 const schema = z
   .object({
     accessToken: z.string().min(1),
@@ -88,13 +86,6 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: updateProfileError.message }, { status: 500 });
   }
 
-  const baseOptions = {
-    httpOnly: true as const,
-    sameSite: "lax" as const,
-    secure: process.env.NODE_ENV === "production",
-    path: "/",
-    maxAge: COOKIE_MAX_AGE
-  };
   cookieStore.delete("mustChangePassword");
 
   return NextResponse.json({

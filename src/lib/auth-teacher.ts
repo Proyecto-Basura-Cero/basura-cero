@@ -74,3 +74,28 @@ export async function assertGroupOwnership(
     throw new HttpError(403, "No tienes asignado este grupo");
   }
 }
+
+/**
+ * Verifica que el maestro (o admin de la escuela) puede gestionar al alumno,
+ * resolviendo el grupo del alumno y reutilizando assertGroupOwnership.
+ * Devuelve el alumno con su group_id. Lanza HttpError si no procede.
+ */
+export async function assertStudentOwnership(
+  session: TeacherSession,
+  studentId: string
+): Promise<{ id: string; groupId: string }> {
+  const supabase = createServerSupabase();
+  const { data: student, error } = await supabase
+    .from("students")
+    .select("id, group_id, school_id")
+    .eq("id", studentId)
+    .maybeSingle();
+
+  if (error) throw new HttpError(500, error.message);
+  if (!student || student.school_id !== session.schoolId) {
+    throw new HttpError(404, "Alumno no encontrado");
+  }
+
+  await assertGroupOwnership(session, student.group_id as string);
+  return { id: student.id as string, groupId: student.group_id as string };
+}

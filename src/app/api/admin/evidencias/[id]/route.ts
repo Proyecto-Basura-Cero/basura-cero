@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { jsonError, requireAdminWithSchool } from "@/lib/auth-admin";
 import { createServerSupabase } from "@/lib/supabase/server";
+import { recalcGroupSubmissionScore } from "@/lib/services/scoring-service";
 
 const schema = z.object({
   status: z.enum(["submitted", "approved", "rejected"])
@@ -42,6 +43,14 @@ export async function PATCH(
       .update({ status: parsed.data.status })
       .eq("id", id);
     if (updateError) throw updateError;
+
+    // Mantener el score coherente al validar: recalcular para submitted/approved,
+    // y limpiar el score si se rechaza.
+    if (parsed.data.status === "rejected") {
+      await supabase.from("scores").delete().eq("submission_id", id);
+    } else {
+      await recalcGroupSubmissionScore(id);
+    }
 
     return NextResponse.json({ ok: true, status: parsed.data.status });
   } catch (error) {
