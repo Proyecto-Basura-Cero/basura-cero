@@ -1,6 +1,8 @@
 export type ScoreWeights = {
   experimentCompleted: number;
   evidenceComplete: number;
+  stepsMax: number;
+  gamesMax: number;
   participationMax: number;
   wasteReductionMax: number;
   reusedItemsMax: number;
@@ -8,15 +10,39 @@ export type ScoreWeights = {
   teamworkMax: number;
 };
 
+/**
+ * Pesos unificados (fuente de verdad en TS). El maximo bruto suma 100 antes
+ * de aplicar el factor temporal. Incluye pasos y mini-juegos (aportes del
+ * alumno agregados al grupo).
+ */
 export const defaultScoreWeights: ScoreWeights = {
-  experimentCompleted: 25,
-  evidenceComplete: 20,
-  participationMax: 15,
-  wasteReductionMax: 15,
+  experimentCompleted: 20,
+  evidenceComplete: 15,
+  stepsMax: 20,
+  gamesMax: 15,
+  participationMax: 10,
+  wasteReductionMax: 10,
   reusedItemsMax: 10,
-  creativityMax: 10,
-  teamworkMax: 5
+  creativityMax: 0,
+  teamworkMax: 0
 };
+
+/**
+ * Curva de penalizacion por tiempo de entrega (por tramos, dia a dia).
+ * Ventana de entrega: hasta end_date del reto = sin penalizacion (factor 1.0).
+ * Cuanto mas tarde, menor el factor, con un minimo garantizado por entregar.
+ * daysLate = dias calendario despues de end_date (0 = en tiempo).
+ */
+export const MIN_TIME_FACTOR = 0.5;
+
+export function timeDecayFactor(daysLate: number): number {
+  if (daysLate <= 0) return 1.0;
+  if (daysLate === 1) return 0.9;
+  if (daysLate === 2) return 0.8;
+  if (daysLate === 3) return 0.7;
+  if (daysLate <= 7) return 0.6;
+  return MIN_TIME_FACTOR;
+}
 
 export type BadgeRuleCode =
   | "guardian_reciclaje"

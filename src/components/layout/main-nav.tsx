@@ -42,12 +42,20 @@ export async function MainNav() {
               <LogoutButton />
             </>
           ) : (
-            <Link
-              href="/login"
-              className="rounded bg-emerald-600 px-3 py-1 text-xs font-semibold text-white hover:bg-emerald-700"
-            >
-              Acceder
-            </Link>
+            <>
+              <Link
+                href="/alumno"
+                className="rounded-full border border-emerald-300 px-3 py-1 text-xs font-semibold text-emerald-700 hover:bg-emerald-50"
+              >
+                Soy alumno
+              </Link>
+              <Link
+                href="/login"
+                className="rounded bg-emerald-600 px-3 py-1 text-xs font-semibold text-white hover:bg-emerald-700"
+              >
+                Acceder
+              </Link>
+            </>
           )}
         </div>
       </nav>

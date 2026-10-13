@@ -1,4 +1,8 @@
-import { defaultScoreWeights, ScoreWeights } from "@/lib/scoring/rules";
+import {
+  defaultScoreWeights,
+  ScoreWeights,
+  timeDecayFactor
+} from "@/lib/scoring/rules";
 
 export type SubmissionMetrics = {
   participantsCount: number;
@@ -8,7 +12,17 @@ export type SubmissionMetrics = {
   creativityScore: number;
   teamworkScore: number;
   hasEvidenceFile: boolean;
+  /**
+   * Dias calendario de retraso respecto al end_date del reto (0 = en tiempo).
+   * Si se omite, se deriva de isOnTime (0 cuando en tiempo, 1 cuando tarde)
+   * para mantener compatibilidad con llamadores antiguos.
+   */
+  daysLate?: number;
   isOnTime: boolean;
+  /** Proporcion de pasos completados por el grupo (0..1). */
+  stepsCompletionRatio?: number;
+  /** Proporcion de desempeno del mini-juego (0..1). */
+  gamesCompletionRatio?: number;
 };
 
 export type ScoreResult = {
@@ -37,32 +51,43 @@ export function calculateScore(
   const experimentPoints = weights.experimentCompleted;
   const evidencePoints = metrics.hasEvidenceFile ? weights.evidenceComplete : 0;
 
-  let subtotal =
+  const stepsRatio = clamp(metrics.stepsCompletionRatio ?? 0, 0, 1);
+  const gamesRatio = clamp(metrics.gamesCompletionRatio ?? 0, 0, 1);
+  const stepsPoints = Math.round(stepsRatio * weights.stepsMax);
+  const gamesPoints = Math.round(gamesRatio * weights.gamesMax);
+
+  const subtotal =
     experimentPoints +
     evidencePoints +
+    stepsPoints +
+    gamesPoints +
     participationPoints +
     wasteReductionPoints +
     reusePoints +
     creativityPoints +
     teamworkPoints;
 
-  if (!metrics.isOnTime) {
-    subtotal = Math.round(subtotal * 0.9);
-  }
+  // Factor temporal por tramos (reemplaza el castigo plano de 10%).
+  const daysLate = metrics.daysLate ?? (metrics.isOnTime ? 0 : 1);
+  const factor = timeDecayFactor(daysLate);
 
-  const pointsTotal = clamp(subtotal, 0, 100);
+  const pointsTotal = clamp(Math.round(subtotal * factor), 0, 100);
 
   return {
     pointsTotal,
     breakdown: {
       experimentCompleted: experimentPoints,
       evidenceComplete: evidencePoints,
+      steps: stepsPoints,
+      games: gamesPoints,
       participation: participationPoints,
       wasteReduction: wasteReductionPoints,
       reusedItems: reusePoints,
       creativity: creativityPoints,
       teamwork: teamworkPoints,
-      latePenaltyApplied: metrics.isOnTime ? 0 : -1
+      subtotal,
+      daysLate,
+      timeFactor: factor
     }
   };
 }
