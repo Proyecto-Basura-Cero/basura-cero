@@ -123,10 +123,10 @@ export function MiniGame({
                       onClick={() => setSelectedLeft(p.left)}
                       className={`w-full rounded-2xl border-2 px-3 py-3 text-left text-base font-semibold transition ${
                         isMatched
-                          ? "border-emerald-300 bg-emerald-50 text-emerald-700"
+                          ? "border-slate-200 bg-slate-100 text-slate-500"
                           : isSelected
-                            ? "border-emerald-500 bg-emerald-100 text-emerald-900"
-                            : "border-slate-200 bg-white text-slate-700 hover:border-emerald-300"
+                            ? "border-eco-500 bg-eco-100 text-eco-700 ring-2 ring-eco-500"
+                            : "border-slate-200 bg-white text-slate-700 hover:border-eco-500"
                       }`}
                     >
                       {isMatched && <CheckCircle2 className="mr-1 inline h-4 w-4" aria-hidden />}
@@ -149,10 +149,10 @@ export function MiniGame({
                       onClick={() => selectedLeft && tryMatch(selectedLeft, right)}
                       className={`w-full rounded-2xl border-2 px-3 py-3 text-left text-base font-semibold transition ${
                         isUsed
-                          ? "border-emerald-300 bg-emerald-50 text-emerald-700"
+                          ? "border-slate-200 bg-slate-100 text-slate-500"
                           : isWrong
                             ? "border-red-400 bg-red-50 text-red-700"
-                            : "border-slate-200 bg-white text-slate-700 hover:border-emerald-300 disabled:opacity-50"
+                            : "border-slate-200 bg-white text-slate-700 hover:border-eco-500 disabled:opacity-50"
                       }`}
                     >
                       {right}
