@@ -2,13 +2,16 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { jsonError, requireAdmin } from "@/lib/auth-admin";
 import { createServerSupabase } from "@/lib/supabase/server";
+import { CHALLENGE_TYPES } from "@/lib/challenge-types";
 
 const statusSchema = z.enum(["draft", "published", "archived"]);
+const challengeTypeSchema = z.enum(CHALLENGE_TYPES);
 
 const createSchema = z.object({
   weekNumber: z.coerce.number().int().min(1).max(52),
   title: z.string().min(2),
   objective: z.string().min(5),
+  challengeType: challengeTypeSchema.nullable().optional(),
   instructions: z.string().min(5),
   curiousFact: z.string().min(5, "El dato curioso es obligatorio"),
   conclusion: z.string().min(5, "La conclusión es obligatoria"),
@@ -45,7 +48,7 @@ export async function GET(request: Request) {
     let query = supabase
       .from("experiments")
       .select(
-        "id, week_number, title, objective, instructions, materials, printable_url, video_url, hypothesis, classification, observations, results_prompt, drawing_prompt, final_message, curious_fact, conclusion, status"
+        "id, week_number, title, objective, challenge_type, instructions, materials, printable_url, video_url, hypothesis, classification, observations, results_prompt, drawing_prompt, final_message, curious_fact, conclusion, status"
       )
       .order("week_number", { ascending: true });
 
@@ -62,6 +65,7 @@ export async function GET(request: Request) {
         weekNumber: e.week_number,
         title: e.title,
         objective: e.objective,
+        challengeType: e.challenge_type,
         instructions: e.instructions,
         materials: e.materials,
         printableUrl: e.printable_url,
@@ -101,6 +105,7 @@ export async function POST(request: Request) {
         week_number: parsed.data.weekNumber,
         title: parsed.data.title,
         objective: parsed.data.objective,
+        challenge_type: parsed.data.challengeType ?? null,
         instructions: parsed.data.instructions,
         curious_fact: parsed.data.curiousFact,
         conclusion: parsed.data.conclusion,

@@ -6,6 +6,8 @@ import Link from "next/link";
 import { Camera, CheckCircle2, Loader2, Trash2, Upload } from "lucide-react";
 import { getErrorMessage } from "@/lib/error-message";
 import { supabaseClient } from "@/lib/supabase/client";
+import { Mascot } from "@/components/students/mascot";
+import { Confetti } from "@/components/students/confetti";
 
 type ExistingSubmission = {
   id: string;
@@ -157,16 +159,18 @@ export function StudentEvidenceUploader() {
         </p>
       )}
       {success && (
-        <p className="rounded-xl bg-emerald-50 px-3 py-2 text-sm font-medium text-emerald-800">
-          Listo! Tu evidencia se envio. Tu maestra o maestro la va a revisar.
-        </p>
+        <div className="relative flex items-center gap-3 overflow-hidden rounded-2xl bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-800">
+          <Confetti />
+          <Mascot mood="celebra" size={56} className="shrink-0" />
+          <span>Listo! Tu evidencia se envio. Tu maestra o maestro la va a revisar.</span>
+        </div>
       )}
 
       <div className="rounded-3xl border-4 border-emerald-200 bg-white p-5">
         <button
           type="button"
           onClick={() => fileInputRef.current?.click()}
-          className="flex w-full flex-col items-center gap-2 rounded-2xl border-4 border-dashed border-emerald-200 bg-emerald-50 py-8 text-emerald-700 hover:border-emerald-400"
+          className="flex w-full flex-col items-center gap-2 rounded-2xl border-4 border-dashed border-emerald-200 bg-emerald-50 py-8 text-emerald-700 transition hover:border-emerald-400 active:scale-[0.98]"
         >
           <Upload className="h-10 w-10" aria-hidden />
           <span className="text-lg font-bold">Elegir fotos</span>
@@ -191,10 +195,10 @@ export function StudentEvidenceUploader() {
                 <button
                   type="button"
                   onClick={() => removeFile(i)}
-                  className="text-red-500 hover:text-red-700"
+                  className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl text-coral-500 hover:bg-coral-50 hover:text-coral-600"
                   aria-label={`Quitar ${f.name}`}
                 >
-                  <Trash2 className="h-4 w-4" aria-hidden />
+                  <Trash2 className="h-5 w-5" aria-hidden />
                 </button>
               </li>
             ))}
@@ -217,7 +221,7 @@ export function StudentEvidenceUploader() {
           type="button"
           onClick={() => void submit()}
           disabled={submitting}
-          className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-emerald-600 px-6 py-4 text-xl font-black text-white hover:bg-emerald-700 disabled:opacity-60"
+          className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-emerald-600 px-6 py-4 text-xl font-black text-white transition hover:bg-emerald-700 active:scale-95 disabled:opacity-60 disabled:active:scale-100"
         >
           {submitting ? <Loader2 className="h-6 w-6 animate-spin" aria-hidden /> : <Upload className="h-6 w-6" aria-hidden />}
           {progress ?? "Enviar mi evidencia"}

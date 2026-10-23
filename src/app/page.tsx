@@ -1,9 +1,11 @@
 import Link from "next/link";
 import { WeekHeroCard } from "@/components/landing/week-hero-card";
 import { KpiTiles } from "@/components/metrics/kpi-tiles";
+import { Calendar52Weeks } from "@/components/gamification/calendar-52-weeks";
 import { formatAdminKpiValue } from "@/lib/services/admin-kpis";
 import { getFeaturedChallenge } from "@/lib/services/current-challenge";
 import { getHomeKpis } from "@/lib/services/home-stats";
+import { getCalendar52Weeks } from "@/lib/services/calendar-52-weeks";
 import { resolveRankingSchoolId } from "@/lib/services/group-ranking";
 
 export const dynamic = "force-dynamic";
@@ -19,11 +21,13 @@ export default async function HomePage() {
     totalReusedItems: 0,
     totalEvidence: 0
   };
+  let calendar: Awaited<ReturnType<typeof getCalendar52Weeks>> | null = null;
 
   try {
-    [challenge, kpis] = await Promise.all([
+    [challenge, kpis, calendar] = await Promise.all([
       getFeaturedChallenge(schoolId),
-      getHomeKpis(schoolId)
+      getHomeKpis(schoolId),
+      getCalendar52Weeks(schoolId)
     ]);
   } catch {
     // Si falla Supabase, se muestran ceros y el estado vacio del reto.
@@ -56,6 +60,23 @@ export default async function HomePage() {
           }
         ]}
       />
+      {calendar && (
+        <section className="rounded-2xl border border-emerald-100 bg-white p-6">
+          <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
+            <h2 className="font-display text-xl font-bold text-emerald-700">
+              Calendario de 52 semanas
+            </h2>
+            <Link
+              href="/calendario"
+              className="text-sm font-semibold text-emerald-600 hover:text-emerald-800"
+            >
+              Ver calendario completo
+            </Link>
+          </div>
+          <Calendar52Weeks weeks={calendar.weeks} showLegend compact />
+        </section>
+      )}
+
       <section className="rounded-2xl border border-emerald-100 bg-white p-6">
         <h2 className="text-xl font-bold text-emerald-700">Como funciona</h2>
         <ol className="mt-3 list-decimal space-y-2 pl-5 text-sm text-slate-700">

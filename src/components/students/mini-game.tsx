@@ -1,7 +1,9 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { CheckCircle2, PartyPopper, RefreshCw } from "lucide-react";
+import { CheckCircle2, RefreshCw } from "lucide-react";
+import { Mascot } from "@/components/students/mascot";
+import { Confetti } from "@/components/students/confetti";
 
 type Pair = { left: string; right: string };
 
@@ -97,15 +99,16 @@ export function MiniGame({
   };
 
   return (
-    <section className="rounded-3xl border-4 border-emerald-200 bg-white p-5">
+    <section className="relative overflow-hidden rounded-3xl border-4 border-emerald-200 bg-white p-5">
+      {done && <Confetti />}
       <h2 className="text-xl font-black text-emerald-700">Juego: {game.title}</h2>
-      <p className="mt-1 text-sm text-slate-500">
+      <p className="mt-1 text-sm text-slate-600">
         Toca una tarjeta de la izquierda y luego su pareja de la derecha.
       </p>
 
       {done ? (
-        <div className="mt-4 flex items-center gap-2 rounded-2xl bg-emerald-50 px-4 py-3 text-emerald-800">
-          <PartyPopper className="h-6 w-6" aria-hidden />
+        <div className="mt-4 flex items-center gap-3 rounded-2xl bg-emerald-50 px-4 py-3 text-emerald-800">
+          <Mascot mood="celebra" size={56} className="shrink-0" />
           <span className="text-lg font-bold">Muy bien! Ganaste {game.points} puntos.</span>
         </div>
       ) : (
@@ -121,15 +124,15 @@ export function MiniGame({
                       type="button"
                       disabled={isMatched}
                       onClick={() => setSelectedLeft(p.left)}
-                      className={`w-full rounded-2xl border-2 px-3 py-3 text-left text-base font-semibold transition ${
+                      className={`w-full rounded-2xl border-2 px-3 py-3 text-left text-base font-semibold transition active:scale-95 ${
                         isMatched
-                          ? "border-slate-200 bg-slate-100 text-slate-500"
+                          ? "animate-pop border-eco-300 bg-eco-50 text-eco-700"
                           : isSelected
                             ? "border-eco-500 bg-eco-100 text-eco-700 ring-2 ring-eco-500"
                             : "border-slate-200 bg-white text-slate-700 hover:border-eco-500"
                       }`}
                     >
-                      {isMatched && <CheckCircle2 className="mr-1 inline h-4 w-4" aria-hidden />}
+                      {isMatched && <CheckCircle2 className="mr-1 inline h-4 w-4 text-eco-600" aria-hidden />}
                       {p.left}
                     </button>
                   </li>
@@ -147,11 +150,11 @@ export function MiniGame({
                       type="button"
                       disabled={isUsed || !selectedLeft}
                       onClick={() => selectedLeft && tryMatch(selectedLeft, right)}
-                      className={`w-full rounded-2xl border-2 px-3 py-3 text-left text-base font-semibold transition ${
+                      className={`w-full rounded-2xl border-2 px-3 py-3 text-left text-base font-semibold transition active:scale-95 ${
                         isUsed
                           ? "border-slate-200 bg-slate-100 text-slate-500"
                           : isWrong
-                            ? "border-red-400 bg-red-50 text-red-700"
+                            ? "animate-shake border-coral-400 bg-coral-50 text-coral-600"
                             : "border-slate-200 bg-white text-slate-700 hover:border-eco-500 disabled:opacity-50"
                       }`}
                     >
@@ -168,7 +171,7 @@ export function MiniGame({
               type="button"
               onClick={() => void finish()}
               disabled={!allMatched || saving}
-              className="rounded-2xl bg-emerald-600 px-5 py-3 text-lg font-black text-white hover:bg-emerald-700 disabled:opacity-50"
+              className="rounded-2xl bg-emerald-600 px-5 py-3 text-lg font-black text-white transition hover:bg-emerald-700 active:scale-95 disabled:opacity-50 disabled:active:scale-100"
             >
               {allMatched ? "Terminar" : "Une todas las parejas"}
             </button>
