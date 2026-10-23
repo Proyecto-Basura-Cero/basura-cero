@@ -2,8 +2,9 @@
 
 import { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { KeyRound, Loader2, Sparkles } from "lucide-react";
+import { KeyRound, Loader2 } from "lucide-react";
 import { getErrorMessage } from "@/lib/error-message";
+import { Mascot } from "@/components/students/mascot";
 
 function AccessFormInner() {
   const router = useRouter();
@@ -43,10 +44,8 @@ function AccessFormInner() {
 
   return (
     <div className="mx-auto max-w-md rounded-3xl border-4 border-emerald-200 bg-white p-8 text-center shadow-sm">
-      <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100">
-        <Sparkles className="h-8 w-8 text-emerald-600" aria-hidden />
-      </div>
-      <h1 className="mt-4 text-3xl font-black text-emerald-700">Hola!</h1>
+      <Mascot mood="hola" size={104} className="mx-auto" />
+      <h1 className="mt-3 text-3xl font-black text-emerald-700">Hola!</h1>
       <p className="mt-2 text-lg text-slate-600">
         Escribe tu codigo para empezar a jugar y cuidar el planeta.
       </p>
@@ -77,7 +76,7 @@ function AccessFormInner() {
         type="button"
         onClick={() => void enter()}
         disabled={loading}
-        className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-emerald-600 px-6 py-4 text-2xl font-black text-white transition hover:bg-emerald-700 disabled:opacity-60"
+        className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-emerald-600 px-6 py-4 text-2xl font-black text-white transition hover:bg-emerald-700 active:scale-95 disabled:opacity-60 disabled:active:scale-100"
       >
         {loading ? (
           <Loader2 className="h-7 w-7 animate-spin" aria-hidden />
@@ -87,7 +86,7 @@ function AccessFormInner() {
         Entrar
       </button>
 
-      <p className="mt-4 text-sm text-slate-400">
+      <p className="mt-4 text-sm text-slate-600">
         Tu maestra o maestro te da este codigo.
       </p>
     </div>

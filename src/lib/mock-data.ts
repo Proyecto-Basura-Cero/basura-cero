@@ -1,4 +1,5 @@
 import { Badge, Experiment, GroupScore } from "@/lib/types";
+import { CHALLENGE_TYPES } from "@/lib/challenge-types";
 
 export const experiments: Experiment[] = Array.from({ length: 52 }, (_, index) => {
   const weekNumber = index + 1;
@@ -7,6 +8,7 @@ export const experiments: Experiment[] = Array.from({ length: 52 }, (_, index) =
     weekNumber,
     title: `Experimento ${weekNumber}`,
     objective: "Separar residuos y reducir basura en el aula.",
+    challengeType: CHALLENGE_TYPES[index % CHALLENGE_TYPES.length],
     instructions: "Separa residuos en estaciones, mide resultados y reflexiona en equipo.",
     materials: "Botes etiquetados, hojas de registro, guantes, etiquetas de colores.",
     printableUrl: `/fichas/semana-${weekNumber}.pdf`,

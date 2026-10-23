@@ -7,6 +7,7 @@ const publicLinks: Array<{ href: Route; label: string }> = [
   { href: "/", label: "Inicio" },
   { href: "/semana-actual", label: "Semana actual" },
   { href: "/experimentos", label: "Experimentos" },
+  { href: "/calendario", label: "Calendario" },
   { href: "/ranking", label: "Ranking" },
   { href: "/insignias", label: "Insignias" }
 ];

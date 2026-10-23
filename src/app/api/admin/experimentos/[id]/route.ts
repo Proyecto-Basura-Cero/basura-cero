@@ -2,12 +2,15 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { jsonError, requireAdmin } from "@/lib/auth-admin";
 import { createServerSupabase } from "@/lib/supabase/server";
+import { CHALLENGE_TYPES } from "@/lib/challenge-types";
 
 const statusSchema = z.enum(["draft", "published", "archived"]);
+const challengeTypeSchema = z.enum(CHALLENGE_TYPES);
 
 const updateSchema = z.object({
   title: z.string().min(2).optional(),
   objective: z.string().min(5).optional(),
+  challengeType: challengeTypeSchema.nullable().optional(),
   instructions: z.string().min(5).optional(),
   curiousFact: z.string().min(5).optional(),
   conclusion: z.string().min(5).optional(),
@@ -42,6 +45,9 @@ export async function PATCH(
     const updates: Record<string, unknown> = { updated_at: new Date().toISOString() };
     if (parsed.data.title !== undefined) updates.title = parsed.data.title;
     if (parsed.data.objective !== undefined) updates.objective = parsed.data.objective;
+    if (parsed.data.challengeType !== undefined) {
+      updates.challenge_type = parsed.data.challengeType ?? null;
+    }
     if (parsed.data.instructions !== undefined) {
       updates.instructions = parsed.data.instructions;
     }

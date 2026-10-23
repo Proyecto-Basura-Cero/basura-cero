@@ -1,4 +1,5 @@
 import { createServerSupabase } from "@/lib/supabase/server";
+import { isChallengeType } from "@/lib/challenge-types";
 import type { Experiment } from "@/lib/types";
 
 type ExperimentRow = {
@@ -6,6 +7,7 @@ type ExperimentRow = {
   week_number: number;
   title: string;
   objective: string;
+  challenge_type: string | null;
   instructions: string;
   materials: string | null;
   printable_url: string | null;
@@ -27,6 +29,7 @@ function mapExperiment(row: ExperimentRow): Experiment {
     weekNumber: row.week_number,
     title: row.title,
     objective: row.objective,
+    challengeType: isChallengeType(row.challenge_type) ? row.challenge_type : null,
     instructions: row.instructions,
     materials: row.materials,
     printableUrl: row.printable_url,
@@ -44,7 +47,7 @@ function mapExperiment(row: ExperimentRow): Experiment {
 }
 
 const SELECT_FIELDS =
-  "id, week_number, title, objective, instructions, materials, printable_url, video_url, hypothesis, classification, observations, results_prompt, drawing_prompt, final_message, curious_fact, conclusion, status";
+  "id, week_number, title, objective, challenge_type, instructions, materials, printable_url, video_url, hypothesis, classification, observations, results_prompt, drawing_prompt, final_message, curious_fact, conclusion, status";
 
 export async function getExperiments(options?: {
   status?: Experiment["status"] | Experiment["status"][];

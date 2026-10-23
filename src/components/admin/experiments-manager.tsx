@@ -2,6 +2,12 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { ExperimentVideoField } from "@/components/admin/experiment-video-field";
+import {
+  CHALLENGE_TYPES,
+  CHALLENGE_TYPE_STYLES,
+  challengeTypeLabel,
+  type ChallengeType
+} from "@/lib/challenge-types";
 
 type ExperimentStatus = "draft" | "published" | "archived";
 
@@ -10,6 +16,7 @@ type Experiment = {
   weekNumber: number;
   title: string;
   objective: string;
+  challengeType: ChallengeType | null;
   instructions: string;
   materials: string | null;
   printableUrl: string | null;
@@ -29,6 +36,7 @@ type FormState = {
   weekNumber: string;
   title: string;
   objective: string;
+  challengeType: ChallengeType | "";
   hypothesis: string;
   materials: string;
   classification: string;
@@ -48,6 +56,7 @@ const EMPTY_FORM: FormState = {
   weekNumber: "",
   title: "",
   objective: "",
+  challengeType: "",
   hypothesis: "",
   materials: "",
   classification: "",
@@ -138,6 +147,7 @@ export function ExperimentsManager() {
       weekNumber: String(experiment.weekNumber),
       title: experiment.title,
       objective: experiment.objective,
+      challengeType: experiment.challengeType ?? "",
       hypothesis: experiment.hypothesis ?? "",
       materials: experiment.materials ?? "",
       classification: experiment.classification ?? "",
@@ -165,6 +175,7 @@ export function ExperimentsManager() {
         weekNumber: Number(createForm.weekNumber),
         title: createForm.title,
         objective: createForm.objective,
+        challengeType: createForm.challengeType || null,
         instructions: createForm.instructions,
         curiousFact: createForm.curiousFact,
         conclusion: createForm.conclusion,
@@ -201,6 +212,7 @@ export function ExperimentsManager() {
       body: JSON.stringify({
         title: editForm.title,
         objective: editForm.objective,
+        challengeType: editForm.challengeType || null,
         instructions: editForm.instructions,
         curiousFact: editForm.curiousFact,
         conclusion: editForm.conclusion,
@@ -301,6 +313,25 @@ export function ExperimentsManager() {
           onChange={(e) => setForm({ ...form, objective: e.target.value })}
           className="mt-1 w-full rounded border border-slate-300 px-2 py-1"
         />
+      </label>
+      <label className="text-sm sm:col-span-2">
+        <span className="block text-slate-600">
+          Tipo de reto (color del calendario)
+        </span>
+        <select
+          value={form.challengeType}
+          onChange={(e) =>
+            setForm({ ...form, challengeType: e.target.value as ChallengeType | "" })
+          }
+          className="mt-1 w-full rounded border border-slate-300 px-2 py-1"
+        >
+          <option value="">Sin tipo</option>
+          {CHALLENGE_TYPES.map((t) => (
+            <option key={t} value={t}>
+              {CHALLENGE_TYPE_STYLES[t].label}
+            </option>
+          ))}
+        </select>
       </label>
       <label className="text-sm sm:col-span-2">
         <span className="block text-slate-600">Hipótesis</span>
@@ -510,8 +541,17 @@ export function ExperimentsManager() {
                 className="flex w-full items-center justify-between gap-3 p-4 text-left"
               >
                 <div>
-                  <div className="flex items-center gap-2">
+                  <div className="flex flex-wrap items-center gap-2">
                     {statusBadge(experiment.status)}
+                    {experiment.challengeType && (
+                      <span className="inline-flex items-center gap-1 rounded-full bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-700">
+                        <span
+                          className={`h-2.5 w-2.5 rounded-full ${CHALLENGE_TYPE_STYLES[experiment.challengeType].swatch}`}
+                          aria-hidden
+                        />
+                        {challengeTypeLabel(experiment.challengeType)}
+                      </span>
+                    )}
                     <span className="font-semibold text-slate-800">
                       Semana {experiment.weekNumber}: {experiment.title}
                     </span>

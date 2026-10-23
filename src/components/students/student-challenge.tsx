@@ -6,6 +6,11 @@ import Link from "next/link";
 import { Camera, CheckCircle2, Circle, LogOut, Sparkles, Trophy } from "lucide-react";
 import { getErrorMessage } from "@/lib/error-message";
 import { MiniGame, type MiniGameData } from "@/components/students/mini-game";
+import { Mascot } from "@/components/students/mascot";
+import { MascotBubble } from "@/components/students/mascot-bubble";
+import { XpBar } from "@/components/students/xp-bar";
+import { Calendar52Weeks } from "@/components/gamification/calendar-52-weeks";
+import type { CalendarWeek } from "@/lib/services/calendar-52-weeks";
 
 type Step = {
   id: string;
@@ -29,7 +34,11 @@ type ChallengeView = {
   student: { alias: string };
 };
 
-export function StudentChallenge() {
+export function StudentChallenge({
+  calendarWeeks = null
+}: {
+  calendarWeeks?: CalendarWeek[] | null;
+}) {
   const router = useRouter();
   const [view, setView] = useState<ChallengeView | null>(null);
   const [loading, setLoading] = useState(true);
@@ -110,7 +119,8 @@ export function StudentChallenge() {
   if (!view?.challenge) {
     return (
       <div className="mx-auto max-w-xl rounded-3xl border-4 border-amber-200 bg-amber-50 p-8 text-center">
-        <h1 className="text-2xl font-black text-amber-800">Todavia no hay reto</h1>
+        <Mascot mood="animo" size={96} className="mx-auto" />
+        <h1 className="mt-3 text-2xl font-black text-amber-800">Todavia no hay reto</h1>
         <p className="mt-2 text-base text-amber-900">
           Pregunta a tu maestra o maestro cuando empiece el reto de esta semana.
         </p>
@@ -128,11 +138,21 @@ export function StudentChallenge() {
   const completedSteps = view.steps.filter((s) => s.completed).length;
   const totalSteps = view.steps.length;
 
+  // XP de la semana a partir de datos reales: puntos de pasos completados
+  // mas los puntos del juego si esta completo, sobre el total posible.
+  const stepPointsEarned = view.steps
+    .filter((s) => s.completed)
+    .reduce((sum, s) => sum + (s.points ?? 0), 0);
+  const stepPointsTotal = view.steps.reduce((sum, s) => sum + (s.points ?? 0), 0);
+  const gamePoints = view.game?.points ?? 0;
+  const xpEarned = stepPointsEarned + (view.game?.completed ? gamePoints : 0);
+  const xpTotal = stepPointsTotal + gamePoints;
+
   return (
     <div className="mx-auto max-w-2xl space-y-6">
       <header className="flex items-center justify-between">
         <div>
-          <p className="text-sm font-semibold text-emerald-600">Hola, {view.student.alias}</p>
+          <p className="text-sm font-semibold text-emerald-600">Tu reto</p>
           <h1 className="text-2xl font-black text-emerald-700">
             Semana {view.challenge.weekNumber}
           </h1>
@@ -145,6 +165,18 @@ export function StudentChallenge() {
           <LogOut className="h-4 w-4" aria-hidden /> Salir
         </button>
       </header>
+
+      <MascotBubble
+        mood={completedSteps === totalSteps && totalSteps > 0 ? "celebra" : "animo"}
+        title={`Vamos, ${view.student.alias}!`}
+        message={
+          totalSteps > 0 && completedSteps === totalSteps
+            ? "Terminaste todos tus pasos. Eres genial!"
+            : "Completa tus pasos y sube tu foto. Yo te acompano."
+        }
+      />
+
+      {xpTotal > 0 && <XpBar earned={xpEarned} total={xpTotal} />}
 
       {error && (
         <p role="alert" className="rounded-xl bg-red-50 px-3 py-2 text-sm font-medium text-red-700">
@@ -175,9 +207,9 @@ export function StudentChallenge() {
                 onClick={() => void toggleStep(step)}
                 disabled={busyStep === step.id}
                 aria-pressed={step.completed}
-                className={`flex w-full items-start gap-3 rounded-2xl border-2 p-4 text-left transition ${
+                className={`flex w-full items-start gap-3 rounded-2xl border-2 p-4 text-left transition active:scale-[0.98] ${
                   step.completed
-                    ? "border-emerald-300 bg-emerald-50"
+                    ? "animate-pop border-emerald-300 bg-emerald-50"
                     : "border-slate-200 bg-white hover:border-emerald-300"
                 }`}
               >
@@ -188,7 +220,7 @@ export function StudentChallenge() {
                 )}
                 <span>
                   <span className="block text-lg font-bold text-slate-800">{step.title}</span>
-                  <span className="block text-sm text-slate-500">{step.description}</span>
+                  <span className="block text-sm text-slate-600">{step.description}</span>
                 </span>
               </button>
             </li>
@@ -198,15 +230,29 @@ export function StudentChallenge() {
 
       {view.game && <MiniGame game={view.game} onComplete={completeGame} />}
 
+      {calendarWeeks && (
+        <section className="rounded-3xl border-4 border-eco-100 bg-white p-5">
+          <h2 className="font-display text-xl font-black text-eco-700">
+            Tu avance del ano
+          </h2>
+          <p className="mt-1 text-sm text-slate-600">
+            Cada cuadrito es una semana. Los de palomita ya los lograron!
+          </p>
+          <div className="mt-4">
+            <Calendar52Weeks weeks={calendarWeeks} compact />
+          </div>
+        </section>
+      )}
+
       <section className="rounded-3xl border-4 border-emerald-200 bg-white p-5 text-center">
         <Camera className="mx-auto h-10 w-10 text-emerald-600" aria-hidden />
         <h2 className="mt-2 text-xl font-black text-emerald-700">Sube tu evidencia</h2>
-        <p className="mt-1 text-sm text-slate-500">
+        <p className="mt-1 text-sm text-slate-600">
           Toma una foto de tu resultado. Importante: que no salgan caras de ninas ni ninos.
         </p>
         <Link
           href="/alumno/evidencia"
-          className="mt-4 inline-block rounded-2xl bg-emerald-600 px-6 py-3 text-lg font-black text-white hover:bg-emerald-700"
+          className="mt-4 inline-block rounded-2xl bg-emerald-600 px-6 py-3 text-lg font-black text-white transition hover:bg-emerald-700 hover:-translate-y-0.5 active:scale-95"
         >
           Subir mi foto
         </Link>
