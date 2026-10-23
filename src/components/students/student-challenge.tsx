@@ -120,7 +120,7 @@ export function StudentChallenge({
     return (
       <div className="mx-auto max-w-xl rounded-3xl border-4 border-amber-200 bg-amber-50 p-8 text-center">
         <Mascot mood="animo" size={96} className="mx-auto" />
-        <h1 className="mt-3 text-2xl font-black text-amber-800">Todavia no hay reto</h1>
+        <h1 className="mt-3 text-2xl font-black text-amber-800">Todavía no hay reto</h1>
         <p className="mt-2 text-base text-amber-900">
           Pregunta a tu maestra o maestro cuando empiece el reto de esta semana.
         </p>
@@ -172,7 +172,7 @@ export function StudentChallenge({
         message={
           totalSteps > 0 && completedSteps === totalSteps
             ? "Terminaste todos tus pasos. Eres genial!"
-            : "Completa tus pasos y sube tu foto. Yo te acompano."
+            : "Completa tus pasos y sube tu foto. Yo te acompaño."
         }
       />
 
@@ -233,7 +233,7 @@ export function StudentChallenge({
       {calendarWeeks && (
         <section className="rounded-3xl border-4 border-eco-100 bg-white p-5">
           <h2 className="font-display text-xl font-black text-eco-700">
-            Tu avance del ano
+            Tu avance del año
           </h2>
           <p className="mt-1 text-sm text-slate-600">
             Cada cuadrito es una semana. Los de palomita ya los lograron!
@@ -248,7 +248,7 @@ export function StudentChallenge({
         <Camera className="mx-auto h-10 w-10 text-emerald-600" aria-hidden />
         <h2 className="mt-2 text-xl font-black text-emerald-700">Sube tu evidencia</h2>
         <p className="mt-1 text-sm text-slate-600">
-          Toma una foto de tu resultado. Importante: que no salgan caras de ninas ni ninos.
+          Toma una foto de tu resultado. Importante: que no salgan caras de niñas ni niños.
         </p>
         <Link
           href="/alumno/evidencia"
