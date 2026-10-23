@@ -76,16 +76,33 @@ export function StudentChallenge({
   const toggleStep = async (step: Step) => {
     setError(null);
     setBusyStep(step.id);
+    const previousView = view;
+    const nextCompleted = !step.completed;
+    // Actualizacion optimista: invertimos el estado del paso al instante para
+    // que lo derivado (palomita/circulo, animate-pop, borde/fondo, contador,
+    // barra de XP y animo de la mascota) se recalcule sin esperar al backend.
+    setView((current) =>
+      current
+        ? {
+            ...current,
+            steps: current.steps.map((s) =>
+              s.id === step.id ? { ...s, completed: nextCompleted } : s
+            )
+          }
+        : current
+    );
     try {
       const res = await fetch("/api/alumno/pasos", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ stepId: step.id, completed: !step.completed })
+        body: JSON.stringify({ stepId: step.id, completed: nextCompleted })
       });
       const payload = await res.json();
       if (!res.ok) throw new Error(payload.error ?? "No se pudo guardar");
       await load();
     } catch (err) {
+      // Reversion: restauramos la vista previa y mostramos el error.
+      setView(previousView);
       setError(getErrorMessage(err));
     } finally {
       setBusyStep(null);
