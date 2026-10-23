@@ -12,6 +12,12 @@ const updateSchema = z.object({
   curiousFact: z.string().min(5).optional(),
   conclusion: z.string().min(5).optional(),
   materials: z.string().nullable().optional(),
+  hypothesis: z.string().nullable().optional(),
+  classification: z.string().nullable().optional(),
+  observations: z.string().nullable().optional(),
+  resultsPrompt: z.string().nullable().optional(),
+  drawingPrompt: z.string().nullable().optional(),
+  finalMessage: z.string().nullable().optional(),
   printableUrl: z.string().nullable().optional(),
   videoUrl: z.string().nullable().optional(),
   status: statusSchema.optional()
@@ -46,6 +52,24 @@ export async function PATCH(
       updates.conclusion = parsed.data.conclusion;
     }
     if (parsed.data.materials !== undefined) updates.materials = parsed.data.materials;
+    if (parsed.data.hypothesis !== undefined) {
+      updates.hypothesis = parsed.data.hypothesis || null;
+    }
+    if (parsed.data.classification !== undefined) {
+      updates.classification = parsed.data.classification || null;
+    }
+    if (parsed.data.observations !== undefined) {
+      updates.observations = parsed.data.observations || null;
+    }
+    if (parsed.data.resultsPrompt !== undefined) {
+      updates.results_prompt = parsed.data.resultsPrompt || null;
+    }
+    if (parsed.data.drawingPrompt !== undefined) {
+      updates.drawing_prompt = parsed.data.drawingPrompt || null;
+    }
+    if (parsed.data.finalMessage !== undefined) {
+      updates.final_message = parsed.data.finalMessage || null;
+    }
     if (parsed.data.printableUrl !== undefined) {
       updates.printable_url = parsed.data.printableUrl || null;
     }

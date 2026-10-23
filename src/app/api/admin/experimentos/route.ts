@@ -13,6 +13,12 @@ const createSchema = z.object({
   curiousFact: z.string().min(5, "El dato curioso es obligatorio"),
   conclusion: z.string().min(5, "La conclusión es obligatoria"),
   materials: z.string().optional(),
+  hypothesis: z.string().nullable().optional(),
+  classification: z.string().nullable().optional(),
+  observations: z.string().nullable().optional(),
+  resultsPrompt: z.string().nullable().optional(),
+  drawingPrompt: z.string().nullable().optional(),
+  finalMessage: z.string().nullable().optional(),
   printableUrl: z.string().optional(),
   videoUrl: z.string().nullable().optional(),
   status: statusSchema.default("draft")
@@ -39,7 +45,7 @@ export async function GET(request: Request) {
     let query = supabase
       .from("experiments")
       .select(
-        "id, week_number, title, objective, instructions, materials, printable_url, video_url, curious_fact, conclusion, status"
+        "id, week_number, title, objective, instructions, materials, printable_url, video_url, hypothesis, classification, observations, results_prompt, drawing_prompt, final_message, curious_fact, conclusion, status"
       )
       .order("week_number", { ascending: true });
 
@@ -60,6 +66,12 @@ export async function GET(request: Request) {
         materials: e.materials,
         printableUrl: e.printable_url,
         videoUrl: e.video_url,
+        hypothesis: e.hypothesis,
+        classification: e.classification,
+        observations: e.observations,
+        resultsPrompt: e.results_prompt,
+        drawingPrompt: e.drawing_prompt,
+        finalMessage: e.final_message,
         curiousFact: e.curious_fact,
         conclusion: e.conclusion,
         status: e.status
@@ -93,6 +105,12 @@ export async function POST(request: Request) {
         curious_fact: parsed.data.curiousFact,
         conclusion: parsed.data.conclusion,
         materials: parsed.data.materials ?? null,
+        hypothesis: parsed.data.hypothesis || null,
+        classification: parsed.data.classification || null,
+        observations: parsed.data.observations || null,
+        results_prompt: parsed.data.resultsPrompt || null,
+        drawing_prompt: parsed.data.drawingPrompt || null,
+        final_message: parsed.data.finalMessage || null,
         printable_url: parsed.data.printableUrl || null,
         video_url: parsed.data.videoUrl || null,
         status: parsed.data.status

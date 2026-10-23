@@ -11,6 +11,12 @@ export const experiments: Experiment[] = Array.from({ length: 52 }, (_, index) =
     materials: "Botes etiquetados, hojas de registro, guantes, etiquetas de colores.",
     printableUrl: `/fichas/semana-${weekNumber}.pdf`,
     videoUrl: null,
+    hypothesis: null,
+    classification: null,
+    observations: null,
+    resultsPrompt: null,
+    drawingPrompt: null,
+    finalMessage: null,
     curiousFact: "Reciclar una tonelada de papel salva cerca de 17 arboles.",
     conclusion: "Aprendimos que separar residuos en el aula reduce basura y cuida el planeta.",
     status: "published" as const
