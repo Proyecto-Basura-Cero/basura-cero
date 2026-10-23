@@ -9,6 +9,12 @@ export type Experiment = {
   materials: string | null;
   printableUrl: string | null;
   videoUrl: string | null;
+  hypothesis: string | null;
+  classification: string | null;
+  observations: string | null;
+  resultsPrompt: string | null;
+  drawingPrompt: string | null;
+  finalMessage: string | null;
   curiousFact: string;
   conclusion: string;
   status: "draft" | "published" | "archived";

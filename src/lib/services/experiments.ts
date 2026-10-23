@@ -10,6 +10,12 @@ type ExperimentRow = {
   materials: string | null;
   printable_url: string | null;
   video_url: string | null;
+  hypothesis: string | null;
+  classification: string | null;
+  observations: string | null;
+  results_prompt: string | null;
+  drawing_prompt: string | null;
+  final_message: string | null;
   curious_fact: string;
   conclusion: string;
   status: Experiment["status"];
@@ -25,6 +31,12 @@ function mapExperiment(row: ExperimentRow): Experiment {
     materials: row.materials,
     printableUrl: row.printable_url,
     videoUrl: row.video_url,
+    hypothesis: row.hypothesis,
+    classification: row.classification,
+    observations: row.observations,
+    resultsPrompt: row.results_prompt,
+    drawingPrompt: row.drawing_prompt,
+    finalMessage: row.final_message,
     curiousFact: row.curious_fact,
     conclusion: row.conclusion,
     status: row.status
@@ -32,7 +44,7 @@ function mapExperiment(row: ExperimentRow): Experiment {
 }
 
 const SELECT_FIELDS =
-  "id, week_number, title, objective, instructions, materials, printable_url, video_url, curious_fact, conclusion, status";
+  "id, week_number, title, objective, instructions, materials, printable_url, video_url, hypothesis, classification, observations, results_prompt, drawing_prompt, final_message, curious_fact, conclusion, status";
 
 export async function getExperiments(options?: {
   status?: Experiment["status"] | Experiment["status"][];
